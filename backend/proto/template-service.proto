@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option go_package = "proto/template";
+
+import "google/api/annotations.proto";
+
+service TemplateService {
+  rpc Greet(TemplateRequest) returns (TemplateResponse) {
+    option (google.api.http) = {
+      post: "/greet"
+      body: "*"
+    };
+  }
+}
+
+message TemplateRequest {
+  string name = 1;
+}
+
+message TemplateResponse {
+  string greeting = 2;
+}
