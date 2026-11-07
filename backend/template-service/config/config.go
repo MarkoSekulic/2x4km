@@ -8,6 +8,6 @@ type Config struct {
 
 func GetConfig() Config {
 	return Config{
-		Address: os.Getenv("TEMPLATE_SERVICE_ADDRESS"),
+		Address: os.Getenv("SERVICE_PORT"),
 	}
 }

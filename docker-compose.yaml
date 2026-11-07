@@ -1,0 +1,43 @@
+services:
+
+  # // frontend \\
+  # frontend:
+  #   build: frontend
+  #   ports:
+  #     - "${APP_PORT}:5000"
+  #   environment:
+
+  #     - REDIS_HOST=${REDIS_HOST}
+  #     - REDIS_PORT=${REDIS_PORT}
+
+  api-gateway:
+    build: 
+      context: backend
+      args:
+        - CURRENT_DIRECTORY=api-gateway
+    ports:
+      - "${API_GATEWAY_PORT-8000}:8000"
+    networks:
+      - backend_net
+    environment:
+      - TEMPLATE_SERVICE_ADDRESS=template-service:${SERVICE_PORT}
+    env_file:
+      - backend/api-gateway/.env
+
+  template-service:
+    build: 
+      context: backend
+      args:
+        - CURRENT_DIRECTORY=template-service
+    ports:
+      - "${TEMPLATE_SERVICE_PORT-}:${SERVICE_PORT}"
+    networks:
+      - backend_net
+    environment:
+      - name=value
+    env_file:
+      - backend/template-service/.env
+
+networks:
+  backend_net:
+    driver: bridge
