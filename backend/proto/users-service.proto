@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option go_package = "proto/users";
+
+import "google/api/annotations.proto";
+
+service UsersService {
+  rpc Greet(UsersRequest) returns (UsersResponse) {
+    option (google.api.http) = {
+      post: "/usergreet"
+      body: "*"
+    };
+  }
+}
+
+message UsersRequest {
+  string name = 1;
+}
+
+message UsersResponse {
+  string greeting = 2;
+}

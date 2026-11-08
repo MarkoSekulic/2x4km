@@ -12,6 +12,8 @@ import (
 	"syscall"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/health"
+	"google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/reflection"
 )
 
@@ -38,6 +40,8 @@ func main() {
 
 	// Bootstrap gRPC service server and respond to request.
 	templateHandler := handlers.TemplateHandler{}
+
+	grpc_health_v1.RegisterHealthServer(grpcServer, health.NewServer())
 	template.RegisterTemplateServiceServer(grpcServer, templateHandler)
 
 	// Graceful Shutdown
@@ -48,9 +52,9 @@ func main() {
 	}()
 
 	stopCh := make(chan os.Signal, 1)
-	signal.Notify(stopCh, syscall.SIGTERM)
+	signal.Notify(stopCh, syscall.SIGTERM, syscall.SIGINT)
 
 	<-stopCh
 
-	grpcServer.Stop()
+	grpcServer.GracefulStop()
 }

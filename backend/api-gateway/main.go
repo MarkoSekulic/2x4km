@@ -10,6 +10,7 @@ import (
 	"os"
 	"os/signal"
 	"proto/template-service"
+	"proto/users-service"
 	"syscall"
 	"time"
 
@@ -46,6 +47,14 @@ func main() {
 	defer templateConn.Close()
 
 	err := template.RegisterTemplateServiceHandlerClient(ctx, gwmux, template.NewTemplateServiceClient(templateConn))
+	if err != nil {
+		log.Fatalln("Failed to register gateway:", err)
+	}
+	// Register User
+	usersConn := dialConnection(cfg.UsersServiceAddress)
+	defer usersConn.Close()
+
+	err = users.RegisterUsersServiceHandlerClient(ctx, gwmux, users.NewUsersServiceClient(usersConn))
 	if err != nil {
 		log.Fatalln("Failed to register gateway:", err)
 	}
