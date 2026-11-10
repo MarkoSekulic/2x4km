@@ -1,21 +1,29 @@
 # Start from the latest golang base image
-FROM golang:latest as builder
+FROM golang:latest AS builder
+ARG CURRENT_DIRECTORY
 
 # Set the Current Working Directory inside the container
 WORKDIR /app
 
 # Copy go mod and sum files
-COPY go.mod go.sum ./
+COPY proto/go.mod proto/go.sum ./proto/
+COPY ${CURRENT_DIRECTORY}/go.mod ${CURRENT_DIRECTORY}/go.sum ./${CURRENT_DIRECTORY}/
+
+# Initialize work to combine proto and current directory dependencies
+RUN go work init ./proto ./${CURRENT_DIRECTORY}
 
 # Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
-RUN go mod download
+RUN --mount=type=cache,target=/go/pkg/mod \
+    go mod download
 
 # Copy everything from the current directory to the Working Directory inside the container
-COPY . .
+COPY proto/ ./proto/
+COPY ${CURRENT_DIRECTORY}/ ./${CURRENT_DIRECTORY}/
 
 # Build the Go app
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
-
+RUN --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
+    CGO_ENABLED=0 GOOS=linux go build -trimpath -ldflags="-s -w" -o main ./${CURRENT_DIRECTORY}
 
 
 ######## Start a new stage from scratch #######

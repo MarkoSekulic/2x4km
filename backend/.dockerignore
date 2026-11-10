@@ -1,0 +1,7 @@
+.git
+**/bin
+**/tmp
+**/*.md
+**/.env
+**/node_modules
+**/*_test.god
