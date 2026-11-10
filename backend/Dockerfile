@@ -5,6 +5,9 @@ ARG CURRENT_DIRECTORY
 # Set the Current Working Directory inside the container
 WORKDIR /app
 
+# Set up Healthcheck 
+COPY --from=ghcr.io/grpc-ecosystem/grpc-health-probe:v0.4.38 /ko-app/grpc-health-probe /bin/grpc_health_probe
+
 # Copy go mod and sum files
 COPY proto/go.mod proto/go.sum ./proto/
 COPY ${CURRENT_DIRECTORY}/go.mod ${CURRENT_DIRECTORY}/go.sum ./${CURRENT_DIRECTORY}/
@@ -33,6 +36,11 @@ WORKDIR /root/
 
 # Copy the Pre-built binary file from the previous stage
 COPY --from=builder /app/main .
+COPY --from=builder /bin/grpc_health_probe /bin/grpc_health_probe
+
+# Healthcheck
+HEALTHCHECK --interval=10s --timeout=3s --start-period=10s --retries=3 \
+  CMD /bin/grpc_health_probe -addr=localhost:8000 || exit 1
 
 # Expose port 8000 to the outside world
 EXPOSE 8000

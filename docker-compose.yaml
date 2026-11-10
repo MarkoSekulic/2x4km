@@ -19,10 +19,12 @@ services:
       - "${API_GATEWAY_PORT-8000}:8000"
     networks:
       - backend_net
-    environment:
-      - TEMPLATE_SERVICE_ADDRESS=template-service:${SERVICE_PORT}
     env_file:
       - backend/api-gateway/.env
+    environment:
+      - TEMPLATE_SERVICE_ADDRESS=template-service:${SERVICE_PORT}
+      - USERS_SERVICE_ADDRESS=users-service:${SERVICE_PORT}
+    healthcheck: { disable: true }
 
   template-service:
     build: 
@@ -33,11 +35,67 @@ services:
       - "${TEMPLATE_SERVICE_PORT-}:${SERVICE_PORT}"
     networks:
       - backend_net
-    environment:
-      - name=value
     env_file:
       - backend/template-service/.env
+    environment:
+      - name=value
+
+  users-service:
+    build: 
+      context: backend
+      args:
+        - CURRENT_DIRECTORY=users-service
+    ports:
+      - "${USERS_SERVICE_PORT-}:${SERVICE_PORT}"
+    networks:
+      - backend_net
+      - users_net
+    env_file:
+      - backend/users-service/.env
+    environment:
+      - MONGODB_ADDR=mongodb://${DB_ROOT_USERNAME}:${DB_ROOT_PASSWORD}@users-mongodb:27017
+    depends_on:
+      users-mongodb:
+        condition: service_healthy
+
+  users-mongodb:
+    image: mongodb/mongodb-atlas-local
+    hostname: users-mongodb
+    environment:
+      - MONGODB_INITDB_ROOT_USERNAME=${DB_ROOT_USERNAME}
+      - MONGODB_INITDB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+    ports:
+      - "${USERS_DB_PORT-}:27017"
+    networks:
+      - users_net
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+      - users_db_data:/data/db
+      - users_db_configdb:/data/configdb
+      - users_db_mongot:/data/mongot
+    attach: false
+    
+    
+volumes:
+  users_db_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/db_data/user/data
+  users_db_configdb:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/db_data/user/configdb
+  users_db_mongot:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/db_data/user/mongot
 
 networks:
   backend_net:
-    driver: bridge
+  users_net:
