@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option go_package = "proto/files";
+
+import "google/api/annotations.proto";
+
+service FilesService {
+  rpc Greet(FilesRequest) returns (FilesResponse) {
+    option (google.api.http) = {
+      post: "/filesgreet"
+      body: "*"
+    };
+  }
+}
+
+message FilesRequest {
+  string name = 1;
+}
+
+message FilesResponse {
+  string greeting = 2;
+}
