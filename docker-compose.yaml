@@ -69,7 +69,7 @@ services:
     networks:
       - users_net
     volumes:
-      - ./init:/docker-entrypoint-initdb.d
+      - ./db_init/users:/docker-entrypoint-initdb.d
       - users_db_data:/data/db
       - users_db_configdb:/data/configdb
       - users_db_mongot:/data/mongot
