@@ -12,7 +12,7 @@ import (
 )
 
 type UsersRepository struct {
-	*mongo.Collection
+	*mongo.Database
 }
 
 func InitDB(ctx context.Context, cfg config.DBConfig) (*UsersRepository, func(ctx context.Context) error, error) {
@@ -30,5 +30,5 @@ func InitDB(ctx context.Context, cfg config.DBConfig) (*UsersRepository, func(ct
 		return nil, nil, fmt.Errorf("ping mongo: %w", err)
 	}
 
-	return &UsersRepository{client.Database("users_db").Collection("users")}, client.Disconnect, nil
+	return &UsersRepository{client.Database("users_db")}, client.Disconnect, nil
 }
