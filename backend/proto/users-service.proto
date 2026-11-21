@@ -5,18 +5,39 @@ option go_package = "proto/users";
 import "google/api/annotations.proto";
 
 service UsersService {
-  rpc Greet(UsersRequest) returns (UsersResponse) {
+  rpc RegisterPreVerify(RegisterRequest) returns (Empty) {
     option (google.api.http) = {
-      post: "/usergreet"
+      post: "/user/register"
+      body: "*"
+    };
+  }
+  rpc Register(VerifyRequest) returns (Empty) {
+    option (google.api.http) = {
+      get: "/user/verify/{verifyId}"
+    };
+  }
+  rpc Login(LoginRequest) returns (Empty) {
+    option (google.api.http) = {
+      post: "/user/login"
       body: "*"
     };
   }
 }
 
-message UsersRequest {
-  string name = 1;
+message Empty {}
+
+message RegisterRequest {
+  string email = 1;
+  string password = 2;
+  string firstName = 3;
+  string lastName = 4;  
 }
 
-message UsersResponse {
-  string greeting = 2;
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message VerifyRequest {
+  string verifyId = 1;
 }
