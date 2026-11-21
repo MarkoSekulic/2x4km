@@ -9,7 +9,6 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"proto/files-service"
 	"proto/template-service"
 	"proto/users-service"
 	"syscall"
@@ -56,15 +55,6 @@ func main() {
 	defer usersConn.Close()
 
 	err = users.RegisterUsersServiceHandlerClient(ctx, gwmux, users.NewUsersServiceClient(usersConn))
-	if err != nil {
-		log.Fatalln("Failed to register gateway:", err)
-	}
-
-	// Register File
-	filesConn := dialConnection(cfg.FilesServiceAddress)
-	defer usersConn.Close()
-
-	err = files.RegisterFilesServiceHandlerClient(ctx, gwmux, files.NewFilesServiceClient(filesConn))
 	if err != nil {
 		log.Fatalln("Failed to register gateway:", err)
 	}
