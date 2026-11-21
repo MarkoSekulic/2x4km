@@ -42,6 +42,36 @@ func main() {
 	}
 	defer disconnectDB(ctx)
 
+
+	// TEMPORARY MONGODB TEST
+
+	root, err := filesRepo.CreateRoot(ctx, "user_123")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Root created:", root.ID)
+
+	documents, err := filesRepo.CreateFolder(ctx, root.RootFolder)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Documents folder:", documents.ID)
+
+	images, err := filesRepo.CreateFolder(ctx, root.RootFolder)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Images folder:", images.ID)
+
+	err = filesRepo.AddFile(ctx, documents.ID, "test-object-001")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("File metadata added successfully")
+	
+	// END TEMPORARY TEST
+
+
 	filesHandler := handlers.InitHandler(filesRepo)
 
 	// Bootstrap gRPC service server and respond to request.
