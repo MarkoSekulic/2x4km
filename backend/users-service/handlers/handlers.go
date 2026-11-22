@@ -8,10 +8,12 @@ import (
 	"crypto/elliptic"
 	"encoding/hex"
 	"errors"
+	"math/rand"
 	"net/http"
 	"proto/users-service"
 	"regexp"
 	"smtp"
+	"strconv"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -156,7 +158,7 @@ func (h UsersHandler) Register(ctx context.Context, request *users.VerifyRequest
 	return &users.Empty{}, nil
 }
 
-func (h UsersHandler) Login(ctx context.Context, request *users.LoginRequest) (*users.Empty, error) {
+func (h UsersHandler) Login(ctx context.Context, request *users.LoginRequest) (*users.TFATokenResponse, error) {
 
 	var result bson.M
 	dbCtx, _ := context.WithTimeout(ctx, 5*time.Second)
@@ -172,6 +174,54 @@ func (h UsersHandler) Login(ctx context.Context, request *users.LoginRequest) (*
 		return nil, status.Error(codes.Unauthenticated, "wrong email/password")
 	}
 
+	passkey := strconv.Itoa(int(rand.Float64() * 1000000))
+	TFADoc := bson.M{
+		"passkey":     passkey,
+		"userId":      result["_id"],
+		"email":       result["email"],
+		"firstName":   result["firstName"],
+		"lastName":    result["lastName"],
+		"dataLimitMB": result["dataLimitMB"],
+	}
+	dbCtx, _ = context.WithTimeout(ctx, 5*time.Second)
+	res, err := h.repo.Collection(VERIFICATION_COLLECTION).InsertOne(dbCtx, TFADoc)
+	if err != nil {
+		return nil, status.Error(codes.Unavailable, "users-db")
+	}
+	TFAtoken, ok := res.InsertedID.(primitive.ObjectID)
+	if !ok {
+		return nil, status.Error(codes.Internal, "userID unprocesable")
+	}
+
+	err = h.utils.SmtpClient.Send(smtp.Message{
+		From:    "noreply@gmail.com",
+		To:      []string{request.Email},
+		Subject: "2x4km 2FA Verification",
+		Body:    "<h1>" + passkey + "</h1>",
+		IsHTML:  true,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &users.TFATokenResponse{TFAToken: TFAtoken.Hex()}, nil
+}
+
+func (h UsersHandler) TFALogin(ctx context.Context, request *users.TFALoginRequest) (*users.Empty, error) {
+
+	TFAId, _ := primitive.ObjectIDFromHex(request.TFAToken)
+	dbCtx, _ := context.WithTimeout(ctx, 5*time.Second)
+	var result bson.M
+	err := h.repo.Collection(VERIFICATION_COLLECTION).FindOne(dbCtx, bson.M{"_id": TFAId}).Decode(&result)
+	if err != nil {
+		return nil, err
+	}
+	if request.Passkey != result["passkey"].(string) {
+		return nil, status.Error(codes.Unauthenticated, "wrong passkey")
+	}
+
+	dbCtx, _ = context.WithTimeout(ctx, 5*time.Second)
+	_, err = h.repo.Collection(VERIFICATION_COLLECTION).DeleteMany(dbCtx, bson.M{"userId": result["userId"]})
 	pkHex, err := hex.DecodeString(h.cfg.JWT_PRIVATE_KEY)
 	if err != nil {
 		return nil, err
@@ -181,7 +231,7 @@ func (h UsersHandler) Login(ctx context.Context, request *users.LoginRequest) (*
 		return nil, err
 	}
 	jwtToken, err := jwt.NewWithClaims(jwt.SigningMethodES256, jwt.MapClaims{
-		"id":          result["_id"],
+		"id":          result["userId"],
 		"email":       result["email"],
 		"firstName":   result["firstName"],
 		"lastName":    result["lastName"],
@@ -190,7 +240,6 @@ func (h UsersHandler) Login(ctx context.Context, request *users.LoginRequest) (*
 	if err != nil {
 		return nil, status.Error(codes.Internal, "Internal Key")
 	}
-
 	cookie := &http.Cookie{
 		Name:     "session_token",
 		Value:    jwtToken,
