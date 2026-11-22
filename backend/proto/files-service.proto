@@ -1,0 +1,113 @@
+syntax = "proto3";
+
+option go_package = "proto/files";
+
+import "google/api/annotations.proto";
+
+service FilesService {
+
+    //Folders CRUD
+  rpc FolderCreate(FolderCreateRequest) returns (FolderCreateResonse){
+    option (google.api.http) = {
+      post: "/folders/create"
+      body: "*"
+    };
+  }
+
+  rpc FolderRead(FolderReadRequest) returns (Empty){
+    option (google.api.http) = {
+      post: "/folders/{folderId}"
+      body: "*"
+    };
+  }
+
+  rpc FolderUpdate(FolderUpdateRequest) returns (FolderUpdateResponse){
+    option (google.api.http) = {
+      post: "/folders/update"
+      body: "*"
+    };
+  }
+
+  rpc FolderDelete(FolderDeleteRequest) returns (FolderDeleteResponse){
+    option (google.api.http) = {
+      post: "/folders/delete"
+      body: "*"
+    };
+  }
+
+  // rpc AddFolder(AddFolderRequest) returns (Empty){
+  //   option (google.api.http) = {
+  //     post: "/folders/add-folder"
+  //     body: "*"
+  //   };
+  // }
+
+  // rpc AddFile(AddFileRequest) returns (Empty){
+  //   option (google.api.http) = {
+  //     post: "/folders/add-file"
+  //     body: "*"
+  //   };
+  // }
+
+}
+
+message Empty{
+
+}
+
+message FolderDeleteRequest {
+  // string folderId = 1;
+}
+
+message FolderDeleteResponse {
+  
+}
+
+message FolderUpdateRequest {
+  string name = 1;
+  string parent = 2;
+
+  string created = 3;
+  string edited = 4;
+  string _ver = 5;
+
+  // repeated File files = int;
+  // repeated Folder folders = int;
+}
+
+message AddFolderRequest {
+  // Folder folder = int;
+}
+
+message AddFileRequest {
+  // File file = int;
+}
+
+message FolderUpdateResponse {
+  
+}
+
+message FolderCreateRequest {
+  string name = 1;
+  string parent = 2;
+
+  string created = 3;
+  string edited = 4;
+  string _ver = 5;
+
+  // repeated File files = int;
+  // repeated Folder children = int;
+
+}
+
+message FolderCreateResonse {
+
+}
+
+message FolderReadRequest {
+  // string folderId = 1;
+}
+
+message FolderReadResponse {
+  
+}
