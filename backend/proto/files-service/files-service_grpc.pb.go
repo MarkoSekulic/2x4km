@@ -20,20 +20,23 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	FilesService_FolderCreate_FullMethodName = "/FilesService/FolderCreate"
-	FilesService_FolderRead_FullMethodName   = "/FilesService/FolderRead"
 	FilesService_FolderUpdate_FullMethodName = "/FilesService/FolderUpdate"
 	FilesService_FolderDelete_FullMethodName = "/FilesService/FolderDelete"
+	FilesService_FileCreate_FullMethodName   = "/FilesService/FileCreate"
+	FilesService_FileUpdate_FullMethodName   = "/FilesService/FileUpdate"
+	FilesService_FileDelete_FullMethodName   = "/FilesService/FileDelete"
 )
 
 // FilesServiceClient is the client API for FilesService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FilesServiceClient interface {
-	//Folders CRUD
-	FolderCreate(ctx context.Context, in *FolderCreateRequest, opts ...grpc.CallOption) (*FolderCreateResonse, error)
-	FolderRead(ctx context.Context, in *FolderReadRequest, opts ...grpc.CallOption) (*Empty, error)
-	FolderUpdate(ctx context.Context, in *FolderUpdateRequest, opts ...grpc.CallOption) (*FolderUpdateResponse, error)
-	FolderDelete(ctx context.Context, in *FolderDeleteRequest, opts ...grpc.CallOption) (*FolderDeleteResponse, error)
+	FolderCreate(ctx context.Context, in *FolderCreateRequest, opts ...grpc.CallOption) (*Empty, error)
+	FolderUpdate(ctx context.Context, in *FolderUpdateRequest, opts ...grpc.CallOption) (*Empty, error)
+	FolderDelete(ctx context.Context, in *FolderDeleteRequest, opts ...grpc.CallOption) (*Empty, error)
+	FileCreate(ctx context.Context, in *FileCreateRequest, opts ...grpc.CallOption) (*Empty, error)
+	FileUpdate(ctx context.Context, in *FileUpdateRequest, opts ...grpc.CallOption) (*Empty, error)
+	FileDelete(ctx context.Context, in *FileDeleteRequest, opts ...grpc.CallOption) (*Empty, error)
 }
 
 type filesServiceClient struct {
@@ -44,9 +47,9 @@ func NewFilesServiceClient(cc grpc.ClientConnInterface) FilesServiceClient {
 	return &filesServiceClient{cc}
 }
 
-func (c *filesServiceClient) FolderCreate(ctx context.Context, in *FolderCreateRequest, opts ...grpc.CallOption) (*FolderCreateResonse, error) {
+func (c *filesServiceClient) FolderCreate(ctx context.Context, in *FolderCreateRequest, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(FolderCreateResonse)
+	out := new(Empty)
 	err := c.cc.Invoke(ctx, FilesService_FolderCreate_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -54,19 +57,9 @@ func (c *filesServiceClient) FolderCreate(ctx context.Context, in *FolderCreateR
 	return out, nil
 }
 
-func (c *filesServiceClient) FolderRead(ctx context.Context, in *FolderReadRequest, opts ...grpc.CallOption) (*Empty, error) {
+func (c *filesServiceClient) FolderUpdate(ctx context.Context, in *FolderUpdateRequest, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, FilesService_FolderRead_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *filesServiceClient) FolderUpdate(ctx context.Context, in *FolderUpdateRequest, opts ...grpc.CallOption) (*FolderUpdateResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(FolderUpdateResponse)
 	err := c.cc.Invoke(ctx, FilesService_FolderUpdate_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -74,10 +67,40 @@ func (c *filesServiceClient) FolderUpdate(ctx context.Context, in *FolderUpdateR
 	return out, nil
 }
 
-func (c *filesServiceClient) FolderDelete(ctx context.Context, in *FolderDeleteRequest, opts ...grpc.CallOption) (*FolderDeleteResponse, error) {
+func (c *filesServiceClient) FolderDelete(ctx context.Context, in *FolderDeleteRequest, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(FolderDeleteResponse)
+	out := new(Empty)
 	err := c.cc.Invoke(ctx, FilesService_FolderDelete_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *filesServiceClient) FileCreate(ctx context.Context, in *FileCreateRequest, opts ...grpc.CallOption) (*Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, FilesService_FileCreate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *filesServiceClient) FileUpdate(ctx context.Context, in *FileUpdateRequest, opts ...grpc.CallOption) (*Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, FilesService_FileUpdate_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *filesServiceClient) FileDelete(ctx context.Context, in *FileDeleteRequest, opts ...grpc.CallOption) (*Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, FilesService_FileDelete_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -88,11 +111,12 @@ func (c *filesServiceClient) FolderDelete(ctx context.Context, in *FolderDeleteR
 // All implementations must embed UnimplementedFilesServiceServer
 // for forward compatibility.
 type FilesServiceServer interface {
-	//Folders CRUD
-	FolderCreate(context.Context, *FolderCreateRequest) (*FolderCreateResonse, error)
-	FolderRead(context.Context, *FolderReadRequest) (*Empty, error)
-	FolderUpdate(context.Context, *FolderUpdateRequest) (*FolderUpdateResponse, error)
-	FolderDelete(context.Context, *FolderDeleteRequest) (*FolderDeleteResponse, error)
+	FolderCreate(context.Context, *FolderCreateRequest) (*Empty, error)
+	FolderUpdate(context.Context, *FolderUpdateRequest) (*Empty, error)
+	FolderDelete(context.Context, *FolderDeleteRequest) (*Empty, error)
+	FileCreate(context.Context, *FileCreateRequest) (*Empty, error)
+	FileUpdate(context.Context, *FileUpdateRequest) (*Empty, error)
+	FileDelete(context.Context, *FileDeleteRequest) (*Empty, error)
 	mustEmbedUnimplementedFilesServiceServer()
 }
 
@@ -103,17 +127,23 @@ type FilesServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedFilesServiceServer struct{}
 
-func (UnimplementedFilesServiceServer) FolderCreate(context.Context, *FolderCreateRequest) (*FolderCreateResonse, error) {
+func (UnimplementedFilesServiceServer) FolderCreate(context.Context, *FolderCreateRequest) (*Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method FolderCreate not implemented")
 }
-func (UnimplementedFilesServiceServer) FolderRead(context.Context, *FolderReadRequest) (*Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method FolderRead not implemented")
-}
-func (UnimplementedFilesServiceServer) FolderUpdate(context.Context, *FolderUpdateRequest) (*FolderUpdateResponse, error) {
+func (UnimplementedFilesServiceServer) FolderUpdate(context.Context, *FolderUpdateRequest) (*Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method FolderUpdate not implemented")
 }
-func (UnimplementedFilesServiceServer) FolderDelete(context.Context, *FolderDeleteRequest) (*FolderDeleteResponse, error) {
+func (UnimplementedFilesServiceServer) FolderDelete(context.Context, *FolderDeleteRequest) (*Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method FolderDelete not implemented")
+}
+func (UnimplementedFilesServiceServer) FileCreate(context.Context, *FileCreateRequest) (*Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method FileCreate not implemented")
+}
+func (UnimplementedFilesServiceServer) FileUpdate(context.Context, *FileUpdateRequest) (*Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method FileUpdate not implemented")
+}
+func (UnimplementedFilesServiceServer) FileDelete(context.Context, *FileDeleteRequest) (*Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method FileDelete not implemented")
 }
 func (UnimplementedFilesServiceServer) mustEmbedUnimplementedFilesServiceServer() {}
 func (UnimplementedFilesServiceServer) testEmbeddedByValue()                      {}
@@ -154,24 +184,6 @@ func _FilesService_FolderCreate_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _FilesService_FolderRead_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(FolderReadRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(FilesServiceServer).FolderRead(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: FilesService_FolderRead_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FilesServiceServer).FolderRead(ctx, req.(*FolderReadRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _FilesService_FolderUpdate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(FolderUpdateRequest)
 	if err := dec(in); err != nil {
@@ -208,6 +220,60 @@ func _FilesService_FolderDelete_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FilesService_FileCreate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FileCreateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FilesServiceServer).FileCreate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FilesService_FileCreate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FilesServiceServer).FileCreate(ctx, req.(*FileCreateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FilesService_FileUpdate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FileUpdateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FilesServiceServer).FileUpdate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FilesService_FileUpdate_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FilesServiceServer).FileUpdate(ctx, req.(*FileUpdateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _FilesService_FileDelete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FileDeleteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FilesServiceServer).FileDelete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FilesService_FileDelete_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FilesServiceServer).FileDelete(ctx, req.(*FileDeleteRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // FilesService_ServiceDesc is the grpc.ServiceDesc for FilesService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -220,16 +286,24 @@ var FilesService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _FilesService_FolderCreate_Handler,
 		},
 		{
-			MethodName: "FolderRead",
-			Handler:    _FilesService_FolderRead_Handler,
-		},
-		{
 			MethodName: "FolderUpdate",
 			Handler:    _FilesService_FolderUpdate_Handler,
 		},
 		{
 			MethodName: "FolderDelete",
 			Handler:    _FilesService_FolderDelete_Handler,
+		},
+		{
+			MethodName: "FileCreate",
+			Handler:    _FilesService_FileCreate_Handler,
+		},
+		{
+			MethodName: "FileUpdate",
+			Handler:    _FilesService_FileUpdate_Handler,
+		},
+		{
+			MethodName: "FileDelete",
+			Handler:    _FilesService_FileDelete_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
