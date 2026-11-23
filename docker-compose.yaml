@@ -99,7 +99,7 @@ services:
     image: mongodb/mongodb-atlas-local
     hostname: files-mongodb
     environment:
-      - MONGODB_INITDB_ROOT_FILENAME=${DB_ROOT_USERNAME}
+      - MONGODB_INITDB_ROOT_USERNAME=${DB_ROOT_USERNAME}
       - MONGODB_INITDB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
     ports:
       - "${FILES_DB_PORT-}:27017"
