@@ -28,6 +28,24 @@ service UsersService {
       body: "*"
     };
   }
+  rpc PrePasswordForgot(PrePassForgotRequest) returns (Empty) {
+    option (google.api.http) = {
+      post: "/user/prePassForgot"
+      body: "*"
+    };
+  }
+  rpc PasswordForgot(PassForgotRequest) returns (Empty) {
+    option (google.api.http) = {
+      post: "/user/passForgot/{passForgotToken}"
+      body: "*"
+    };
+  }
+  rpc PasswordReset(PasswordResetRequest) returns (Empty) {
+    option (google.api.http) = {
+      post: "/user/passReset"
+      body: "*"
+    };
+  }
 }
 
 message Empty {}
@@ -55,4 +73,19 @@ message TFALoginRequest {
 
 message TFATokenResponse {
   string TFAToken = 1;
+}
+
+message PrePassForgotRequest {
+  string email = 1;
+}
+
+message PassForgotRequest {
+  string passForgotToken = 1;
+  string email = 2;
+  string newPassword = 3;
+}
+
+message PasswordResetRequest {
+  string oldPassword = 1;
+  string newPassword = 2;
 }

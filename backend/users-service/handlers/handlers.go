@@ -79,7 +79,8 @@ func (h UsersHandler) RegisterPreVerify(ctx context.Context, request *users.Regi
 	}
 
 	var result bson.M
-	dbCtx, _ := context.WithTimeout(ctx, 5*time.Second)
+	dbCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
 	err = h.repo.Collection(USER_COLLECTION).FindOne(dbCtx, bson.M{"email": request.Email}, options.FindOne().SetProjection(bson.M{"_id": 1})).Decode(&result)
 	if err == nil {
 		return nil, status.Error(codes.AlreadyExists, "duplicate email")
@@ -87,7 +88,8 @@ func (h UsersHandler) RegisterPreVerify(ctx context.Context, request *users.Regi
 		return nil, status.Error(codes.Unavailable, "users-db")
 	}
 
-	dbCtx, _ = context.WithTimeout(ctx, 5*time.Second)
+	dbCtx, cancel = context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
 	res, err := h.repo.Collection(VERIFICATION_COLLECTION).InsertOne(dbCtx, userDoc)
 	if err != nil {
 		return nil, status.Error(codes.Unavailable, "users-db")
@@ -161,7 +163,8 @@ func (h UsersHandler) Register(ctx context.Context, request *users.VerifyRequest
 func (h UsersHandler) Login(ctx context.Context, request *users.LoginRequest) (*users.TFATokenResponse, error) {
 
 	var result bson.M
-	dbCtx, _ := context.WithTimeout(ctx, 5*time.Second)
+	dbCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
 	err := h.repo.Collection(USER_COLLECTION).FindOne(dbCtx, bson.M{"email": request.Email}).Decode(&result)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
@@ -176,6 +179,7 @@ func (h UsersHandler) Login(ctx context.Context, request *users.LoginRequest) (*
 
 	passkey := strconv.Itoa(int(rand.Float64() * 1000000))
 	TFADoc := bson.M{
+		"_type":       "TFA",
 		"passkey":     passkey,
 		"userId":      result["_id"],
 		"email":       result["email"],
@@ -183,7 +187,8 @@ func (h UsersHandler) Login(ctx context.Context, request *users.LoginRequest) (*
 		"lastName":    result["lastName"],
 		"dataLimitMB": result["dataLimitMB"],
 	}
-	dbCtx, _ = context.WithTimeout(ctx, 5*time.Second)
+	dbCtx, cancel = context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
 	res, err := h.repo.Collection(VERIFICATION_COLLECTION).InsertOne(dbCtx, TFADoc)
 	if err != nil {
 		return nil, status.Error(codes.Unavailable, "users-db")
@@ -210,7 +215,8 @@ func (h UsersHandler) Login(ctx context.Context, request *users.LoginRequest) (*
 func (h UsersHandler) TFALogin(ctx context.Context, request *users.TFALoginRequest) (*users.Empty, error) {
 
 	TFAId, _ := primitive.ObjectIDFromHex(request.TFAToken)
-	dbCtx, _ := context.WithTimeout(ctx, 5*time.Second)
+	dbCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
 	var result bson.M
 	err := h.repo.Collection(VERIFICATION_COLLECTION).FindOne(dbCtx, bson.M{"_id": TFAId}).Decode(&result)
 	if err != nil {
@@ -220,8 +226,9 @@ func (h UsersHandler) TFALogin(ctx context.Context, request *users.TFALoginReque
 		return nil, status.Error(codes.Unauthenticated, "wrong passkey")
 	}
 
-	dbCtx, _ = context.WithTimeout(ctx, 5*time.Second)
-	_, err = h.repo.Collection(VERIFICATION_COLLECTION).DeleteMany(dbCtx, bson.M{"userId": result["userId"]})
+	dbCtx, cancel = context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	_, err = h.repo.Collection(VERIFICATION_COLLECTION).DeleteMany(dbCtx, bson.M{"userId": result["userId"], "_type": "TFA"})
 	pkHex, err := hex.DecodeString(h.cfg.JWT_PRIVATE_KEY)
 	if err != nil {
 		return nil, err
@@ -250,4 +257,103 @@ func (h UsersHandler) TFALogin(ctx context.Context, request *users.TFALoginReque
 	}
 	grpc.SendHeader(ctx, metadata.Pairs("set-cookie", cookie.String()))
 	return &users.Empty{}, nil
+}
+
+func (h UsersHandler) PrePasswordForgot(ctx context.Context, request *users.PrePassForgotRequest) (*users.Empty, error) {
+	var result bson.M
+	dbCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	err := h.repo.Collection(USER_COLLECTION).FindOne(dbCtx, bson.M{"email": request.Email}).Decode(&result)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return nil, status.Error(codes.Unauthenticated, "")
+		}
+		return nil, status.Error(codes.Unavailable, "users-db")
+	}
+
+	lastPassChangeDate, ok := result["lastPassChangeDate"]
+	if !ok || lastPassChangeDate == "" {
+		lastPassChangeDate = result["createdAt"]
+	}
+	if !lastPassChangeDate.(primitive.DateTime).Time().Before(time.Now().UTC().Add(-24 * time.Hour)) {
+		return nil, status.Error(codes.FailedPrecondition, "passwords can be changed once per day")
+	}
+
+	PassForgotDoc := map[string]any{
+		"_type":           "PF",
+		"userId":          result["_id"],
+		"email":           result["email"],
+		"oldPasswordHash": result["passwordHash"],
+	}
+
+	dbCtx, cancel = context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	res, err := h.repo.Collection(VERIFICATION_COLLECTION).InsertOne(dbCtx, PassForgotDoc)
+	if err != nil {
+		return nil, status.Error(codes.Unavailable, "users-db")
+	}
+	PassForgotToken, ok := res.InsertedID.(primitive.ObjectID)
+	if !ok {
+		return nil, status.Error(codes.Internal, "userID unprocesable")
+	}
+	err = h.utils.SmtpClient.Send(smtp.Message{
+		From:    "noreply@gmail.com",
+		To:      []string{request.Email},
+		Subject: "2x4km Account Password Forgot ",
+		Body:    "<a href='localhost:3000/user/passForgot/" + PassForgotToken.Hex() + "' > Verify account here </a> ",
+		IsHTML:  true,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &users.Empty{}, nil
+}
+
+func (h UsersHandler) PasswordForgot(ctx context.Context, request *users.PassForgotRequest) (*users.Empty, error) {
+
+	passForgotId, _ := primitive.ObjectIDFromHex(request.PassForgotToken)
+
+	var result bson.M
+	dbCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	err := h.repo.Collection(VERIFICATION_COLLECTION).FindOne(dbCtx, bson.M{"_id": passForgotId}).Decode(&result)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return nil, status.Error(codes.Unauthenticated, "")
+		}
+		return nil, status.Error(codes.Unavailable, "users-db")
+	}
+
+	match := request.Email == result["email"]
+	if !match {
+		return nil, status.Error(codes.Unauthenticated, "")
+	}
+	err = bcrypt.CompareHashAndPassword([]byte(result["oldPasswordHash"].(string)), []byte(request.NewPassword))
+	if err != nil {
+		return nil, status.Error(codes.Unauthenticated, "password can't be the same as previous")
+	}
+
+	newPasswordHash, err := bcrypt.GenerateFromPassword([]byte(request.NewPassword), 10) //12 is standard
+	if err != nil {
+		return nil, status.Error(codes.Internal, "Password")
+	}
+
+	session, err := h.repo.Client().StartSession()
+	if err != nil {
+		return nil, status.Error(codes.Unavailable, "users-db")
+	}
+
+	_, err = session.WithTransaction(ctx, func(dbCtx mongo.SessionContext) (interface{}, error) {
+		err = h.repo.Collection(USER_COLLECTION).FindOneAndUpdate(dbCtx, &bson.M{"_id": result["userId"]}, &bson.M{"passwordHash": newPasswordHash, "lastPassChangeDate": time.Now().UTC()}).Err()
+		if err != nil {
+			return nil, status.Error(codes.Unavailable, "users-db")
+		}
+		_, err = h.repo.Collection(VERIFICATION_COLLECTION).DeleteMany(dbCtx, bson.M{"userId": result["userId"], "_type": "PF"})
+		return nil, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &users.Empty{}, err
 }
