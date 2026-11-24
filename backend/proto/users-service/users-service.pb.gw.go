@@ -173,9 +173,9 @@ func local_request_UsersService_TFALogin_0(ctx context.Context, marshaler runtim
 	return msg, metadata, err
 }
 
-func request_UsersService_PrePasswordForgot_0(ctx context.Context, marshaler runtime.Marshaler, client UsersServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_UsersService_PrePasswordReset_0(ctx context.Context, marshaler runtime.Marshaler, client UsersServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq PrePassForgotRequest
+		protoReq PrePassResetRequest
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -184,25 +184,25 @@ func request_UsersService_PrePasswordForgot_0(ctx context.Context, marshaler run
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.PrePasswordForgot(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.PrePasswordReset(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_UsersService_PrePasswordForgot_0(ctx context.Context, marshaler runtime.Marshaler, server UsersServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_UsersService_PrePasswordReset_0(ctx context.Context, marshaler runtime.Marshaler, server UsersServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq PrePassForgotRequest
+		protoReq PrePassResetRequest
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	msg, err := server.PrePasswordForgot(ctx, &protoReq)
+	msg, err := server.PrePasswordReset(ctx, &protoReq)
 	return msg, metadata, err
 }
 
-func request_UsersService_PasswordForgot_0(ctx context.Context, marshaler runtime.Marshaler, client UsersServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_UsersService_PasswordReset_0(ctx context.Context, marshaler runtime.Marshaler, client UsersServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq PassForgotRequest
+		protoReq PassResetRequest
 		metadata runtime.ServerMetadata
 		err      error
 	)
@@ -220,13 +220,13 @@ func request_UsersService_PasswordForgot_0(ctx context.Context, marshaler runtim
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.PasswordForgot(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.PasswordReset(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_UsersService_PasswordForgot_0(ctx context.Context, marshaler runtime.Marshaler, server UsersServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_UsersService_PasswordReset_0(ctx context.Context, marshaler runtime.Marshaler, server UsersServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq PassForgotRequest
+		protoReq PassResetRequest
 		metadata runtime.ServerMetadata
 		err      error
 	)
@@ -241,7 +241,7 @@ func local_request_UsersService_PasswordForgot_0(ctx context.Context, marshaler 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "passForgotToken", err)
 	}
-	msg, err := server.PasswordForgot(ctx, &protoReq)
+	msg, err := server.PasswordReset(ctx, &protoReq)
 	return msg, metadata, err
 }
 
@@ -331,45 +331,45 @@ func RegisterUsersServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		}
 		forward_UsersService_TFALogin_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_UsersService_PrePasswordForgot_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_UsersService_PrePasswordReset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.UsersService/PrePasswordForgot", runtime.WithHTTPPathPattern("/user/prePassForgot"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.UsersService/PrePasswordReset", runtime.WithHTTPPathPattern("/user/prePassForgot"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_UsersService_PrePasswordForgot_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_UsersService_PrePasswordReset_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_UsersService_PrePasswordForgot_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_UsersService_PrePasswordReset_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_UsersService_PasswordForgot_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_UsersService_PasswordReset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.UsersService/PasswordForgot", runtime.WithHTTPPathPattern("/user/passForgot/{passForgotToken}"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.UsersService/PasswordReset", runtime.WithHTTPPathPattern("/user/passForgot/{passForgotToken}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_UsersService_PasswordForgot_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_UsersService_PasswordReset_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_UsersService_PasswordForgot_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_UsersService_PasswordReset_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
@@ -479,39 +479,39 @@ func RegisterUsersServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		}
 		forward_UsersService_TFALogin_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_UsersService_PrePasswordForgot_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_UsersService_PrePasswordReset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.UsersService/PrePasswordForgot", runtime.WithHTTPPathPattern("/user/prePassForgot"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.UsersService/PrePasswordReset", runtime.WithHTTPPathPattern("/user/prePassForgot"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_UsersService_PrePasswordForgot_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_UsersService_PrePasswordReset_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_UsersService_PrePasswordForgot_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_UsersService_PrePasswordReset_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_UsersService_PasswordForgot_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_UsersService_PasswordReset_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.UsersService/PasswordForgot", runtime.WithHTTPPathPattern("/user/passForgot/{passForgotToken}"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.UsersService/PasswordReset", runtime.WithHTTPPathPattern("/user/passForgot/{passForgotToken}"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_UsersService_PasswordForgot_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_UsersService_PasswordReset_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_UsersService_PasswordForgot_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_UsersService_PasswordReset_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	return nil
 }
@@ -521,8 +521,8 @@ var (
 	pattern_UsersService_Register_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"user", "verify", "verifyId"}, ""))
 	pattern_UsersService_Login_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"user", "login"}, ""))
 	pattern_UsersService_TFALogin_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"user", "TFALogin", "TFAToken"}, ""))
-	pattern_UsersService_PrePasswordForgot_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"user", "prePassForgot"}, ""))
-	pattern_UsersService_PasswordForgot_0    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"user", "passForgot", "passForgotToken"}, ""))
+	pattern_UsersService_PrePasswordReset_0  = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"user", "prePassForgot"}, ""))
+	pattern_UsersService_PasswordReset_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"user", "passForgot", "passForgotToken"}, ""))
 )
 
 var (
@@ -530,6 +530,6 @@ var (
 	forward_UsersService_Register_0          = runtime.ForwardResponseMessage
 	forward_UsersService_Login_0             = runtime.ForwardResponseMessage
 	forward_UsersService_TFALogin_0          = runtime.ForwardResponseMessage
-	forward_UsersService_PrePasswordForgot_0 = runtime.ForwardResponseMessage
-	forward_UsersService_PasswordForgot_0    = runtime.ForwardResponseMessage
+	forward_UsersService_PrePasswordReset_0  = runtime.ForwardResponseMessage
+	forward_UsersService_PasswordReset_0     = runtime.ForwardResponseMessage
 )

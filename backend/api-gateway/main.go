@@ -41,7 +41,7 @@ func main() {
 	ctx := context.Background()
 
 	// Apply Response Middleware
-	gwmux := runtime.NewServeMux(runtime.WithForwardResponseOption(middleware.ResponseHeaderMiddleware))
+	gwmux := runtime.NewServeMux(runtime.WithMetadata(middleware.CookieToMetadataMiddleware), runtime.WithForwardResponseOption(middleware.ResponseHeaderMiddleware))
 
 	// Register Template
 	templateConn := dialConnection(cfg.TemplateServiceAddress)

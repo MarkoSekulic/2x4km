@@ -23,8 +23,8 @@ const (
 	UsersService_Register_FullMethodName          = "/UsersService/Register"
 	UsersService_Login_FullMethodName             = "/UsersService/Login"
 	UsersService_TFALogin_FullMethodName          = "/UsersService/TFALogin"
-	UsersService_PrePasswordForgot_FullMethodName = "/UsersService/PrePasswordForgot"
-	UsersService_PasswordForgot_FullMethodName    = "/UsersService/PasswordForgot"
+	UsersService_PrePasswordReset_FullMethodName  = "/UsersService/PrePasswordReset"
+	UsersService_PasswordReset_FullMethodName     = "/UsersService/PasswordReset"
 )
 
 // UsersServiceClient is the client API for UsersService service.
@@ -35,8 +35,8 @@ type UsersServiceClient interface {
 	Register(ctx context.Context, in *VerifyRequest, opts ...grpc.CallOption) (*Empty, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*TFATokenResponse, error)
 	TFALogin(ctx context.Context, in *TFALoginRequest, opts ...grpc.CallOption) (*Empty, error)
-	PrePasswordForgot(ctx context.Context, in *PrePassForgotRequest, opts ...grpc.CallOption) (*Empty, error)
-	PasswordForgot(ctx context.Context, in *PassForgotRequest, opts ...grpc.CallOption) (*Empty, error)
+	PrePasswordReset(ctx context.Context, in *PrePassResetRequest, opts ...grpc.CallOption) (*Empty, error)
+	PasswordReset(ctx context.Context, in *PassResetRequest, opts ...grpc.CallOption) (*Empty, error)
 }
 
 type usersServiceClient struct {
@@ -87,20 +87,20 @@ func (c *usersServiceClient) TFALogin(ctx context.Context, in *TFALoginRequest, 
 	return out, nil
 }
 
-func (c *usersServiceClient) PrePasswordForgot(ctx context.Context, in *PrePassForgotRequest, opts ...grpc.CallOption) (*Empty, error) {
+func (c *usersServiceClient) PrePasswordReset(ctx context.Context, in *PrePassResetRequest, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, UsersService_PrePasswordForgot_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, UsersService_PrePasswordReset_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *usersServiceClient) PasswordForgot(ctx context.Context, in *PassForgotRequest, opts ...grpc.CallOption) (*Empty, error) {
+func (c *usersServiceClient) PasswordReset(ctx context.Context, in *PassResetRequest, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, UsersService_PasswordForgot_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, UsersService_PasswordReset_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -115,8 +115,8 @@ type UsersServiceServer interface {
 	Register(context.Context, *VerifyRequest) (*Empty, error)
 	Login(context.Context, *LoginRequest) (*TFATokenResponse, error)
 	TFALogin(context.Context, *TFALoginRequest) (*Empty, error)
-	PrePasswordForgot(context.Context, *PrePassForgotRequest) (*Empty, error)
-	PasswordForgot(context.Context, *PassForgotRequest) (*Empty, error)
+	PrePasswordReset(context.Context, *PrePassResetRequest) (*Empty, error)
+	PasswordReset(context.Context, *PassResetRequest) (*Empty, error)
 	mustEmbedUnimplementedUsersServiceServer()
 }
 
@@ -139,11 +139,11 @@ func (UnimplementedUsersServiceServer) Login(context.Context, *LoginRequest) (*T
 func (UnimplementedUsersServiceServer) TFALogin(context.Context, *TFALoginRequest) (*Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method TFALogin not implemented")
 }
-func (UnimplementedUsersServiceServer) PrePasswordForgot(context.Context, *PrePassForgotRequest) (*Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method PrePasswordForgot not implemented")
+func (UnimplementedUsersServiceServer) PrePasswordReset(context.Context, *PrePassResetRequest) (*Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method PrePasswordReset not implemented")
 }
-func (UnimplementedUsersServiceServer) PasswordForgot(context.Context, *PassForgotRequest) (*Empty, error) {
-	return nil, status.Error(codes.Unimplemented, "method PasswordForgot not implemented")
+func (UnimplementedUsersServiceServer) PasswordReset(context.Context, *PassResetRequest) (*Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method PasswordReset not implemented")
 }
 func (UnimplementedUsersServiceServer) mustEmbedUnimplementedUsersServiceServer() {}
 func (UnimplementedUsersServiceServer) testEmbeddedByValue()                      {}
@@ -238,38 +238,38 @@ func _UsersService_TFALogin_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UsersService_PrePasswordForgot_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PrePassForgotRequest)
+func _UsersService_PrePasswordReset_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PrePassResetRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UsersServiceServer).PrePasswordForgot(ctx, in)
+		return srv.(UsersServiceServer).PrePasswordReset(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UsersService_PrePasswordForgot_FullMethodName,
+		FullMethod: UsersService_PrePasswordReset_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UsersServiceServer).PrePasswordForgot(ctx, req.(*PrePassForgotRequest))
+		return srv.(UsersServiceServer).PrePasswordReset(ctx, req.(*PrePassResetRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _UsersService_PasswordForgot_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PassForgotRequest)
+func _UsersService_PasswordReset_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PassResetRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UsersServiceServer).PasswordForgot(ctx, in)
+		return srv.(UsersServiceServer).PasswordReset(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UsersService_PasswordForgot_FullMethodName,
+		FullMethod: UsersService_PasswordReset_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UsersServiceServer).PasswordForgot(ctx, req.(*PassForgotRequest))
+		return srv.(UsersServiceServer).PasswordReset(ctx, req.(*PassResetRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -298,12 +298,12 @@ var UsersService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UsersService_TFALogin_Handler,
 		},
 		{
-			MethodName: "PrePasswordForgot",
-			Handler:    _UsersService_PrePasswordForgot_Handler,
+			MethodName: "PrePasswordReset",
+			Handler:    _UsersService_PrePasswordReset_Handler,
 		},
 		{
-			MethodName: "PasswordForgot",
-			Handler:    _UsersService_PasswordForgot_Handler,
+			MethodName: "PasswordReset",
+			Handler:    _UsersService_PasswordReset_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

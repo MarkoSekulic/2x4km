@@ -259,7 +259,7 @@ func (h UsersHandler) TFALogin(ctx context.Context, request *users.TFALoginReque
 	return &users.Empty{}, nil
 }
 
-func (h UsersHandler) PrePasswordForgot(ctx context.Context, request *users.PrePassForgotRequest) (*users.Empty, error) {
+func (h UsersHandler) PrePasswordReset(ctx context.Context, request *users.PrePassResetRequest) (*users.Empty, error) {
 	var result bson.M
 	dbCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
@@ -310,7 +310,7 @@ func (h UsersHandler) PrePasswordForgot(ctx context.Context, request *users.PreP
 	return &users.Empty{}, nil
 }
 
-func (h UsersHandler) PasswordForgot(ctx context.Context, request *users.PassForgotRequest) (*users.Empty, error) {
+func (h UsersHandler) PasswordReset(ctx context.Context, request *users.PassResetRequest) (*users.Empty, error) {
 
 	passForgotId, _ := primitive.ObjectIDFromHex(request.PassForgotToken)
 

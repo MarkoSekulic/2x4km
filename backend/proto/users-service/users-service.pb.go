@@ -318,27 +318,27 @@ func (x *TFATokenResponse) GetTFAToken() string {
 	return ""
 }
 
-type PrePassForgotRequest struct {
+type PrePassResetRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *PrePassForgotRequest) Reset() {
-	*x = PrePassForgotRequest{}
+func (x *PrePassResetRequest) Reset() {
+	*x = PrePassResetRequest{}
 	mi := &file_users_service_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *PrePassForgotRequest) String() string {
+func (x *PrePassResetRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*PrePassForgotRequest) ProtoMessage() {}
+func (*PrePassResetRequest) ProtoMessage() {}
 
-func (x *PrePassForgotRequest) ProtoReflect() protoreflect.Message {
+func (x *PrePassResetRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_users_service_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -350,19 +350,19 @@ func (x *PrePassForgotRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use PrePassForgotRequest.ProtoReflect.Descriptor instead.
-func (*PrePassForgotRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use PrePassResetRequest.ProtoReflect.Descriptor instead.
+func (*PrePassResetRequest) Descriptor() ([]byte, []int) {
 	return file_users_service_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *PrePassForgotRequest) GetEmail() string {
+func (x *PrePassResetRequest) GetEmail() string {
 	if x != nil {
 		return x.Email
 	}
 	return ""
 }
 
-type PassForgotRequest struct {
+type PassResetRequest struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	PassForgotToken string                 `protobuf:"bytes,1,opt,name=passForgotToken,proto3" json:"passForgotToken,omitempty"`
 	Email           string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
@@ -371,20 +371,20 @@ type PassForgotRequest struct {
 	sizeCache       protoimpl.SizeCache
 }
 
-func (x *PassForgotRequest) Reset() {
-	*x = PassForgotRequest{}
+func (x *PassResetRequest) Reset() {
+	*x = PassResetRequest{}
 	mi := &file_users_service_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *PassForgotRequest) String() string {
+func (x *PassResetRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*PassForgotRequest) ProtoMessage() {}
+func (*PassResetRequest) ProtoMessage() {}
 
-func (x *PassForgotRequest) ProtoReflect() protoreflect.Message {
+func (x *PassResetRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_users_service_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -396,26 +396,26 @@ func (x *PassForgotRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use PassForgotRequest.ProtoReflect.Descriptor instead.
-func (*PassForgotRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use PassResetRequest.ProtoReflect.Descriptor instead.
+func (*PassResetRequest) Descriptor() ([]byte, []int) {
 	return file_users_service_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *PassForgotRequest) GetPassForgotToken() string {
+func (x *PassResetRequest) GetPassForgotToken() string {
 	if x != nil {
 		return x.PassForgotToken
 	}
 	return ""
 }
 
-func (x *PassForgotRequest) GetEmail() string {
+func (x *PassResetRequest) GetEmail() string {
 	if x != nil {
 		return x.Email
 	}
 	return ""
 }
 
-func (x *PassForgotRequest) GetNewPassword() string {
+func (x *PassResetRequest) GetNewPassword() string {
 	if x != nil {
 		return x.NewPassword
 	}
@@ -442,20 +442,20 @@ const file_users_service_proto_rawDesc = "" +
 	"\bTFAToken\x18\x01 \x01(\tR\bTFAToken\x12\x18\n" +
 	"\apasskey\x18\x02 \x01(\tR\apasskey\".\n" +
 	"\x10TFATokenResponse\x12\x1a\n" +
-	"\bTFAToken\x18\x01 \x01(\tR\bTFAToken\",\n" +
-	"\x14PrePassForgotRequest\x12\x14\n" +
-	"\x05email\x18\x01 \x01(\tR\x05email\"u\n" +
-	"\x11PassForgotRequest\x12(\n" +
+	"\bTFAToken\x18\x01 \x01(\tR\bTFAToken\"+\n" +
+	"\x13PrePassResetRequest\x12\x14\n" +
+	"\x05email\x18\x01 \x01(\tR\x05email\"t\n" +
+	"\x10PassResetRequest\x12(\n" +
 	"\x0fpassForgotToken\x18\x01 \x01(\tR\x0fpassForgotToken\x12\x14\n" +
 	"\x05email\x18\x02 \x01(\tR\x05email\x12 \n" +
-	"\vnewPassword\x18\x03 \x01(\tR\vnewPassword2\xdd\x03\n" +
+	"\vnewPassword\x18\x03 \x01(\tR\vnewPassword2\xd9\x03\n" +
 	"\fUsersService\x12H\n" +
 	"\x11RegisterPreVerify\x12\x10.RegisterRequest\x1a\x06.Empty\"\x19\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/user/register\x12C\n" +
 	"\bRegister\x12\x0e.VerifyRequest\x1a\x06.Empty\"\x1f\x82\xd3\xe4\x93\x02\x19\x12\x17/user/verify/{verifyId}\x12A\n" +
 	"\x05Login\x12\r.LoginRequest\x1a\x11.TFATokenResponse\"\x16\x82\xd3\xe4\x93\x02\x10:\x01*\"\v/user/login\x12J\n" +
-	"\bTFALogin\x12\x10.TFALoginRequest\x1a\x06.Empty\"$\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/user/TFALogin/{TFAToken}\x12R\n" +
-	"\x11PrePasswordForgot\x12\x15.PrePassForgotRequest\x1a\x06.Empty\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/user/prePassForgot\x12[\n" +
-	"\x0ePasswordForgot\x12\x12.PassForgotRequest\x1a\x06.Empty\"-\x82\xd3\xe4\x93\x02':\x01*\"\"/user/passForgot/{passForgotToken}B\rZ\vproto/usersb\x06proto3"
+	"\bTFALogin\x12\x10.TFALoginRequest\x1a\x06.Empty\"$\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/user/TFALogin/{TFAToken}\x12P\n" +
+	"\x10PrePasswordReset\x12\x14.PrePassResetRequest\x1a\x06.Empty\"\x1e\x82\xd3\xe4\x93\x02\x18:\x01*\"\x13/user/prePassForgot\x12Y\n" +
+	"\rPasswordReset\x12\x11.PassResetRequest\x1a\x06.Empty\"-\x82\xd3\xe4\x93\x02':\x01*\"\"/user/passForgot/{passForgotToken}B\rZ\vproto/usersb\x06proto3"
 
 var (
 	file_users_service_proto_rawDescOnce sync.Once
@@ -471,28 +471,28 @@ func file_users_service_proto_rawDescGZIP() []byte {
 
 var file_users_service_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_users_service_proto_goTypes = []any{
-	(*Empty)(nil),                // 0: Empty
-	(*RegisterRequest)(nil),      // 1: RegisterRequest
-	(*LoginRequest)(nil),         // 2: LoginRequest
-	(*VerifyRequest)(nil),        // 3: VerifyRequest
-	(*TFALoginRequest)(nil),      // 4: TFALoginRequest
-	(*TFATokenResponse)(nil),     // 5: TFATokenResponse
-	(*PrePassForgotRequest)(nil), // 6: PrePassForgotRequest
-	(*PassForgotRequest)(nil),    // 7: PassForgotRequest
+	(*Empty)(nil),               // 0: Empty
+	(*RegisterRequest)(nil),     // 1: RegisterRequest
+	(*LoginRequest)(nil),        // 2: LoginRequest
+	(*VerifyRequest)(nil),       // 3: VerifyRequest
+	(*TFALoginRequest)(nil),     // 4: TFALoginRequest
+	(*TFATokenResponse)(nil),    // 5: TFATokenResponse
+	(*PrePassResetRequest)(nil), // 6: PrePassResetRequest
+	(*PassResetRequest)(nil),    // 7: PassResetRequest
 }
 var file_users_service_proto_depIdxs = []int32{
 	1, // 0: UsersService.RegisterPreVerify:input_type -> RegisterRequest
 	3, // 1: UsersService.Register:input_type -> VerifyRequest
 	2, // 2: UsersService.Login:input_type -> LoginRequest
 	4, // 3: UsersService.TFALogin:input_type -> TFALoginRequest
-	6, // 4: UsersService.PrePasswordForgot:input_type -> PrePassForgotRequest
-	7, // 5: UsersService.PasswordForgot:input_type -> PassForgotRequest
+	6, // 4: UsersService.PrePasswordReset:input_type -> PrePassResetRequest
+	7, // 5: UsersService.PasswordReset:input_type -> PassResetRequest
 	0, // 6: UsersService.RegisterPreVerify:output_type -> Empty
 	0, // 7: UsersService.Register:output_type -> Empty
 	5, // 8: UsersService.Login:output_type -> TFATokenResponse
 	0, // 9: UsersService.TFALogin:output_type -> Empty
-	0, // 10: UsersService.PrePasswordForgot:output_type -> Empty
-	0, // 11: UsersService.PasswordForgot:output_type -> Empty
+	0, // 10: UsersService.PrePasswordReset:output_type -> Empty
+	0, // 11: UsersService.PasswordReset:output_type -> Empty
 	6, // [6:12] is the sub-list for method output_type
 	0, // [0:6] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
