@@ -12,8 +12,13 @@ COPY --from=ghcr.io/grpc-ecosystem/grpc-health-probe:v0.4.38 /ko-app/grpc-health
 COPY proto/go.mod proto/go.sum ./proto/
 COPY ${CURRENT_DIRECTORY}/go.mod ${CURRENT_DIRECTORY}/go.sum ./${CURRENT_DIRECTORY}/
 
+COPY shared/ ./shared/
+
 # Initialize work to combine proto and current directory dependencies
 RUN go work init ./proto ./${CURRENT_DIRECTORY}
+
+# Add shared dependencies
+RUN go work use -r ./shared
 
 # Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
 RUN --mount=type=cache,target=/go/pkg/mod \

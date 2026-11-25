@@ -11,6 +11,7 @@ import (
 	"os"
 	"os/signal"
 	"proto/users-service"
+	"smtp"
 	"syscall"
 
 	"google.golang.org/grpc"
@@ -42,7 +43,9 @@ func main() {
 	}
 	defer disconnectDB(ctx)
 
-	usersHandler := handlers.InitHandler(usersRepo)
+	usersHandler := handlers.InitHandler(usersRepo, &cfg.UserConfig, handlers.HandlerUtils{
+		SmtpClient: smtp.New(cfg.SMTPConfig),
+	})
 
 	// Bootstrap gRPC service server and respond to request.
 	grpc_health_v1.RegisterHealthServer(grpcServer, health.NewServer())

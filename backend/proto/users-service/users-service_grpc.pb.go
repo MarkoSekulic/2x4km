@@ -19,14 +19,18 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	UsersService_Greet_FullMethodName = "/UsersService/Greet"
+	UsersService_RegisterPreVerify_FullMethodName = "/UsersService/RegisterPreVerify"
+	UsersService_Register_FullMethodName          = "/UsersService/Register"
+	UsersService_Login_FullMethodName             = "/UsersService/Login"
 )
 
 // UsersServiceClient is the client API for UsersService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UsersServiceClient interface {
-	Greet(ctx context.Context, in *UsersRequest, opts ...grpc.CallOption) (*UsersResponse, error)
+	RegisterPreVerify(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*Empty, error)
+	Register(ctx context.Context, in *VerifyRequest, opts ...grpc.CallOption) (*Empty, error)
+	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*Empty, error)
 }
 
 type usersServiceClient struct {
@@ -37,10 +41,30 @@ func NewUsersServiceClient(cc grpc.ClientConnInterface) UsersServiceClient {
 	return &usersServiceClient{cc}
 }
 
-func (c *usersServiceClient) Greet(ctx context.Context, in *UsersRequest, opts ...grpc.CallOption) (*UsersResponse, error) {
+func (c *usersServiceClient) RegisterPreVerify(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UsersResponse)
-	err := c.cc.Invoke(ctx, UsersService_Greet_FullMethodName, in, out, cOpts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, UsersService_RegisterPreVerify_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *usersServiceClient) Register(ctx context.Context, in *VerifyRequest, opts ...grpc.CallOption) (*Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, UsersService_Register_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *usersServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, UsersService_Login_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +75,9 @@ func (c *usersServiceClient) Greet(ctx context.Context, in *UsersRequest, opts .
 // All implementations must embed UnimplementedUsersServiceServer
 // for forward compatibility.
 type UsersServiceServer interface {
-	Greet(context.Context, *UsersRequest) (*UsersResponse, error)
+	RegisterPreVerify(context.Context, *RegisterRequest) (*Empty, error)
+	Register(context.Context, *VerifyRequest) (*Empty, error)
+	Login(context.Context, *LoginRequest) (*Empty, error)
 	mustEmbedUnimplementedUsersServiceServer()
 }
 
@@ -62,8 +88,14 @@ type UsersServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedUsersServiceServer struct{}
 
-func (UnimplementedUsersServiceServer) Greet(context.Context, *UsersRequest) (*UsersResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method Greet not implemented")
+func (UnimplementedUsersServiceServer) RegisterPreVerify(context.Context, *RegisterRequest) (*Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method RegisterPreVerify not implemented")
+}
+func (UnimplementedUsersServiceServer) Register(context.Context, *VerifyRequest) (*Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Register not implemented")
+}
+func (UnimplementedUsersServiceServer) Login(context.Context, *LoginRequest) (*Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method Login not implemented")
 }
 func (UnimplementedUsersServiceServer) mustEmbedUnimplementedUsersServiceServer() {}
 func (UnimplementedUsersServiceServer) testEmbeddedByValue()                      {}
@@ -86,20 +118,56 @@ func RegisterUsersServiceServer(s grpc.ServiceRegistrar, srv UsersServiceServer)
 	s.RegisterService(&UsersService_ServiceDesc, srv)
 }
 
-func _UsersService_Greet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UsersRequest)
+func _UsersService_RegisterPreVerify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(UsersServiceServer).Greet(ctx, in)
+		return srv.(UsersServiceServer).RegisterPreVerify(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: UsersService_Greet_FullMethodName,
+		FullMethod: UsersService_RegisterPreVerify_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UsersServiceServer).Greet(ctx, req.(*UsersRequest))
+		return srv.(UsersServiceServer).RegisterPreVerify(ctx, req.(*RegisterRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UsersService_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerifyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersServiceServer).Register(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UsersService_Register_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersServiceServer).Register(ctx, req.(*VerifyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UsersService_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersServiceServer).Login(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UsersService_Login_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersServiceServer).Login(ctx, req.(*LoginRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -112,8 +180,16 @@ var UsersService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*UsersServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Greet",
-			Handler:    _UsersService_Greet_Handler,
+			MethodName: "RegisterPreVerify",
+			Handler:    _UsersService_RegisterPreVerify_Handler,
+		},
+		{
+			MethodName: "Register",
+			Handler:    _UsersService_Register_Handler,
+		},
+		{
+			MethodName: "Login",
+			Handler:    _UsersService_Login_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

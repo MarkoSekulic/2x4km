@@ -50,6 +50,7 @@ services:
     networks:
       - backend_net
       - users_net
+      - mail_net
     env_file:
       - backend/users-service/.env
     environment:
@@ -76,6 +77,14 @@ services:
     attach: false
     
     
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - "1025:1025" # SMTP server port
+      - "8025:8025" # Web UI port
+    networks:
+      - mail_net
+
 volumes:
   users_db_data:
     driver: local
@@ -99,3 +108,4 @@ volumes:
 networks:
   backend_net:
   users_net:
+  mail_net:
