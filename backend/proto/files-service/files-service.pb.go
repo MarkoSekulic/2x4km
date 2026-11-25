@@ -58,26 +58,29 @@ func (*Empty) Descriptor() ([]byte, []int) {
 	return file_files_service_proto_rawDescGZIP(), []int{0}
 }
 
-type FolderDeleteRequest struct {
+type FolderCreateRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	ParentId      string                 `protobuf:"bytes,2,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty"`
+	UserId        string                 `protobuf:"bytes,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *FolderDeleteRequest) Reset() {
-	*x = FolderDeleteRequest{}
+func (x *FolderCreateRequest) Reset() {
+	*x = FolderCreateRequest{}
 	mi := &file_files_service_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *FolderDeleteRequest) String() string {
+func (x *FolderCreateRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*FolderDeleteRequest) ProtoMessage() {}
+func (*FolderCreateRequest) ProtoMessage() {}
 
-func (x *FolderDeleteRequest) ProtoReflect() protoreflect.Message {
+func (x *FolderCreateRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_files_service_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -89,14 +92,37 @@ func (x *FolderDeleteRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FolderDeleteRequest.ProtoReflect.Descriptor instead.
-func (*FolderDeleteRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use FolderCreateRequest.ProtoReflect.Descriptor instead.
+func (*FolderCreateRequest) Descriptor() ([]byte, []int) {
 	return file_files_service_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *FolderCreateRequest) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *FolderCreateRequest) GetParentId() string {
+	if x != nil {
+		return x.ParentId
+	}
+	return ""
+}
+
+func (x *FolderCreateRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
 }
 
 type FolderUpdateRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	NewName       string                 `protobuf:"bytes,2,opt,name=new_name,json=newName,proto3" json:"new_name,omitempty"`
+	NewParentId   string                 `protobuf:"bytes,3,opt,name=new_parent_id,json=newParentId,proto3" json:"new_parent_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -131,36 +157,48 @@ func (*FolderUpdateRequest) Descriptor() ([]byte, []int) {
 	return file_files_service_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *FolderUpdateRequest) GetName() string {
+func (x *FolderUpdateRequest) GetId() string {
 	if x != nil {
-		return x.Name
+		return x.Id
 	}
 	return ""
 }
 
-type FolderCreateRequest struct {
+func (x *FolderUpdateRequest) GetNewName() string {
+	if x != nil {
+		return x.NewName
+	}
+	return ""
+}
+
+func (x *FolderUpdateRequest) GetNewParentId() string {
+	if x != nil {
+		return x.NewParentId
+	}
+	return ""
+}
+
+type FolderDeleteRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	ParentId      string                 `protobuf:"bytes,3,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty"`
-	UserId        string                 `protobuf:"bytes,4,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *FolderCreateRequest) Reset() {
-	*x = FolderCreateRequest{}
+func (x *FolderDeleteRequest) Reset() {
+	*x = FolderDeleteRequest{}
 	mi := &file_files_service_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *FolderCreateRequest) String() string {
+func (x *FolderDeleteRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*FolderCreateRequest) ProtoMessage() {}
+func (*FolderDeleteRequest) ProtoMessage() {}
 
-func (x *FolderCreateRequest) ProtoReflect() protoreflect.Message {
+func (x *FolderDeleteRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_files_service_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -172,41 +210,180 @@ func (x *FolderCreateRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use FolderCreateRequest.ProtoReflect.Descriptor instead.
-func (*FolderCreateRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use FolderDeleteRequest.ProtoReflect.Descriptor instead.
+func (*FolderDeleteRequest) Descriptor() ([]byte, []int) {
 	return file_files_service_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *FolderCreateRequest) GetName() string {
+func (x *FolderDeleteRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type FolderReadRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FolderReadRequest) Reset() {
+	*x = FolderReadRequest{}
+	mi := &file_files_service_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FolderReadRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FolderReadRequest) ProtoMessage() {}
+
+func (x *FolderReadRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_files_service_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FolderReadRequest.ProtoReflect.Descriptor instead.
+func (*FolderReadRequest) Descriptor() ([]byte, []int) {
+	return file_files_service_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *FolderReadRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type FolderReadResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	ParentId      string                 `protobuf:"bytes,3,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty"`
+	Root          string                 `protobuf:"bytes,4,opt,name=root,proto3" json:"root,omitempty"`
+	ChildFolders  []string               `protobuf:"bytes,5,rep,name=child_folders,json=childFolders,proto3" json:"child_folders,omitempty"`
+	Files         []string               `protobuf:"bytes,6,rep,name=files,proto3" json:"files,omitempty"`
+	CreatedAt     string                 `protobuf:"bytes,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	Edited        string                 `protobuf:"bytes,8,opt,name=edited,proto3" json:"edited,omitempty"`
+	Ver           int64                  `protobuf:"varint,9,opt,name=ver,proto3" json:"ver,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FolderReadResponse) Reset() {
+	*x = FolderReadResponse{}
+	mi := &file_files_service_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FolderReadResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FolderReadResponse) ProtoMessage() {}
+
+func (x *FolderReadResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_files_service_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FolderReadResponse.ProtoReflect.Descriptor instead.
+func (*FolderReadResponse) Descriptor() ([]byte, []int) {
+	return file_files_service_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *FolderReadResponse) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *FolderReadResponse) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *FolderCreateRequest) GetParentId() string {
+func (x *FolderReadResponse) GetParentId() string {
 	if x != nil {
 		return x.ParentId
 	}
 	return ""
 }
 
-func (x *FolderCreateRequest) GetUserId() string {
+func (x *FolderReadResponse) GetRoot() string {
 	if x != nil {
-		return x.UserId
+		return x.Root
 	}
 	return ""
 }
 
+func (x *FolderReadResponse) GetChildFolders() []string {
+	if x != nil {
+		return x.ChildFolders
+	}
+	return nil
+}
+
+func (x *FolderReadResponse) GetFiles() []string {
+	if x != nil {
+		return x.Files
+	}
+	return nil
+}
+
+func (x *FolderReadResponse) GetCreatedAt() string {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return ""
+}
+
+func (x *FolderReadResponse) GetEdited() string {
+	if x != nil {
+		return x.Edited
+	}
+	return ""
+}
+
+func (x *FolderReadResponse) GetVer() int64 {
+	if x != nil {
+		return x.Ver
+	}
+	return 0
+}
+
 type FileDeleteRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *FileDeleteRequest) Reset() {
 	*x = FileDeleteRequest{}
-	mi := &file_files_service_proto_msgTypes[4]
+	mi := &file_files_service_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -218,7 +395,7 @@ func (x *FileDeleteRequest) String() string {
 func (*FileDeleteRequest) ProtoMessage() {}
 
 func (x *FileDeleteRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_files_service_proto_msgTypes[4]
+	mi := &file_files_service_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -231,19 +408,28 @@ func (x *FileDeleteRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FileDeleteRequest.ProtoReflect.Descriptor instead.
 func (*FileDeleteRequest) Descriptor() ([]byte, []int) {
-	return file_files_service_proto_rawDescGZIP(), []int{4}
+	return file_files_service_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *FileDeleteRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
 }
 
 type FileUpdateRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	NewName       string                 `protobuf:"bytes,2,opt,name=new_name,json=newName,proto3" json:"new_name,omitempty"`
+	NewParentId   string                 `protobuf:"bytes,3,opt,name=new_parent_id,json=newParentId,proto3" json:"new_parent_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *FileUpdateRequest) Reset() {
 	*x = FileUpdateRequest{}
-	mi := &file_files_service_proto_msgTypes[5]
+	mi := &file_files_service_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -255,7 +441,7 @@ func (x *FileUpdateRequest) String() string {
 func (*FileUpdateRequest) ProtoMessage() {}
 
 func (x *FileUpdateRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_files_service_proto_msgTypes[5]
+	mi := &file_files_service_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -268,12 +454,26 @@ func (x *FileUpdateRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FileUpdateRequest.ProtoReflect.Descriptor instead.
 func (*FileUpdateRequest) Descriptor() ([]byte, []int) {
-	return file_files_service_proto_rawDescGZIP(), []int{5}
+	return file_files_service_proto_rawDescGZIP(), []int{7}
 }
 
-func (x *FileUpdateRequest) GetName() string {
+func (x *FileUpdateRequest) GetId() string {
 	if x != nil {
-		return x.Name
+		return x.Id
+	}
+	return ""
+}
+
+func (x *FileUpdateRequest) GetNewName() string {
+	if x != nil {
+		return x.NewName
+	}
+	return ""
+}
+
+func (x *FileUpdateRequest) GetNewParentId() string {
+	if x != nil {
+		return x.NewParentId
 	}
 	return ""
 }
@@ -289,7 +489,7 @@ type FileCreateRequest struct {
 
 func (x *FileCreateRequest) Reset() {
 	*x = FileCreateRequest{}
-	mi := &file_files_service_proto_msgTypes[6]
+	mi := &file_files_service_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -301,7 +501,7 @@ func (x *FileCreateRequest) String() string {
 func (*FileCreateRequest) ProtoMessage() {}
 
 func (x *FileCreateRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_files_service_proto_msgTypes[6]
+	mi := &file_files_service_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -314,7 +514,7 @@ func (x *FileCreateRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FileCreateRequest.ProtoReflect.Descriptor instead.
 func (*FileCreateRequest) Descriptor() ([]byte, []int) {
-	return file_files_service_proto_rawDescGZIP(), []int{6}
+	return file_files_service_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *FileCreateRequest) GetName() string {
@@ -338,36 +538,214 @@ func (x *FileCreateRequest) GetUserId() string {
 	return ""
 }
 
+type FileReadRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FileReadRequest) Reset() {
+	*x = FileReadRequest{}
+	mi := &file_files_service_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FileReadRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FileReadRequest) ProtoMessage() {}
+
+func (x *FileReadRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_files_service_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FileReadRequest.ProtoReflect.Descriptor instead.
+func (*FileReadRequest) Descriptor() ([]byte, []int) {
+	return file_files_service_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *FileReadRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type FileReadResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	ParentId      string                 `protobuf:"bytes,3,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty"`
+	Root          string                 `protobuf:"bytes,4,opt,name=root,proto3" json:"root,omitempty"`
+	CreatedAt     string                 `protobuf:"bytes,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	Edited        string                 `protobuf:"bytes,6,opt,name=edited,proto3" json:"edited,omitempty"`
+	Ver           int64                  `protobuf:"varint,7,opt,name=ver,proto3" json:"ver,omitempty"`
+	Osid          string                 `protobuf:"bytes,8,opt,name=osid,proto3" json:"osid,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FileReadResponse) Reset() {
+	*x = FileReadResponse{}
+	mi := &file_files_service_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FileReadResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FileReadResponse) ProtoMessage() {}
+
+func (x *FileReadResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_files_service_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FileReadResponse.ProtoReflect.Descriptor instead.
+func (*FileReadResponse) Descriptor() ([]byte, []int) {
+	return file_files_service_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *FileReadResponse) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *FileReadResponse) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *FileReadResponse) GetParentId() string {
+	if x != nil {
+		return x.ParentId
+	}
+	return ""
+}
+
+func (x *FileReadResponse) GetRoot() string {
+	if x != nil {
+		return x.Root
+	}
+	return ""
+}
+
+func (x *FileReadResponse) GetCreatedAt() string {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return ""
+}
+
+func (x *FileReadResponse) GetEdited() string {
+	if x != nil {
+		return x.Edited
+	}
+	return ""
+}
+
+func (x *FileReadResponse) GetVer() int64 {
+	if x != nil {
+		return x.Ver
+	}
+	return 0
+}
+
+func (x *FileReadResponse) GetOsid() string {
+	if x != nil {
+		return x.Osid
+	}
+	return ""
+}
+
 var File_files_service_proto protoreflect.FileDescriptor
 
 const file_files_service_proto_rawDesc = "" +
 	"\n" +
 	"\x13files-service.proto\x1a\x1cgoogle/api/annotations.proto\"\a\n" +
-	"\x05Empty\"\x15\n" +
-	"\x13FolderDeleteRequest\")\n" +
-	"\x13FolderUpdateRequest\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\"_\n" +
+	"\x05Empty\"_\n" +
 	"\x13FolderCreateRequest\x12\x12\n" +
+	"\x04name\x18\x01 \x01(\tR\x04name\x12\x1b\n" +
+	"\tparent_id\x18\x02 \x01(\tR\bparentId\x12\x17\n" +
+	"\auser_id\x18\x03 \x01(\tR\x06userId\"d\n" +
+	"\x13FolderUpdateRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x19\n" +
+	"\bnew_name\x18\x02 \x01(\tR\anewName\x12\"\n" +
+	"\rnew_parent_id\x18\x03 \x01(\tR\vnewParentId\"%\n" +
+	"\x13FolderDeleteRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"#\n" +
+	"\x11FolderReadRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"\xed\x01\n" +
+	"\x12FolderReadResponse\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1b\n" +
-	"\tparent_id\x18\x03 \x01(\tR\bparentId\x12\x17\n" +
-	"\auser_id\x18\x04 \x01(\tR\x06userId\"\x13\n" +
-	"\x11FileDeleteRequest\"'\n" +
-	"\x11FileUpdateRequest\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\"]\n" +
+	"\tparent_id\x18\x03 \x01(\tR\bparentId\x12\x12\n" +
+	"\x04root\x18\x04 \x01(\tR\x04root\x12#\n" +
+	"\rchild_folders\x18\x05 \x03(\tR\fchildFolders\x12\x14\n" +
+	"\x05files\x18\x06 \x03(\tR\x05files\x12\x1d\n" +
+	"\n" +
+	"created_at\x18\a \x01(\tR\tcreatedAt\x12\x16\n" +
+	"\x06edited\x18\b \x01(\tR\x06edited\x12\x10\n" +
+	"\x03ver\x18\t \x01(\x03R\x03ver\"#\n" +
+	"\x11FileDeleteRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"b\n" +
+	"\x11FileUpdateRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x19\n" +
+	"\bnew_name\x18\x02 \x01(\tR\anewName\x12\"\n" +
+	"\rnew_parent_id\x18\x03 \x01(\tR\vnewParentId\"]\n" +
 	"\x11FileCreateRequest\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1b\n" +
 	"\tparent_id\x18\x03 \x01(\tR\bparentId\x12\x17\n" +
-	"\auser_id\x18\x04 \x01(\tR\x06userId2\xb8\x03\n" +
+	"\auser_id\x18\x04 \x01(\tR\x06userId\"!\n" +
+	"\x0fFileReadRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"\xc4\x01\n" +
+	"\x10FileReadResponse\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x1b\n" +
+	"\tparent_id\x18\x03 \x01(\tR\bparentId\x12\x12\n" +
+	"\x04root\x18\x04 \x01(\tR\x04root\x12\x1d\n" +
+	"\n" +
+	"created_at\x18\x05 \x01(\tR\tcreatedAt\x12\x16\n" +
+	"\x06edited\x18\x06 \x01(\tR\x06edited\x12\x10\n" +
+	"\x03ver\x18\a \x01(\x03R\x03ver\x12\x12\n" +
+	"\x04osid\x18\b \x01(\tR\x04osid2\xd2\x04\n" +
 	"\fFilesService\x12H\n" +
 	"\fFolderCreate\x12\x14.FolderCreateRequest\x1a\x06.Empty\"\x1a\x82\xd3\xe4\x93\x02\x14:\x01*\"\x0f/folders/create\x12H\n" +
 	"\fFolderUpdate\x12\x14.FolderUpdateRequest\x1a\x06.Empty\"\x1a\x82\xd3\xe4\x93\x02\x14:\x01*\"\x0f/folders/update\x12H\n" +
-	"\fFolderDelete\x12\x14.FolderDeleteRequest\x1a\x06.Empty\"\x1a\x82\xd3\xe4\x93\x02\x14:\x01*\"\x0f/folders/delete\x12B\n" +
+	"\fFolderDelete\x12\x14.FolderDeleteRequest\x1a\x06.Empty\"\x1a\x82\xd3\xe4\x93\x02\x14:\x01*\"\x0f/folders/delete\x12O\n" +
+	"\n" +
+	"FolderRead\x12\x12.FolderReadRequest\x1a\x13.FolderReadResponse\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/folders/read\x12B\n" +
 	"\n" +
 	"FileCreate\x12\x12.FileCreateRequest\x1a\x06.Empty\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/files/create\x12B\n" +
 	"\n" +
 	"FileUpdate\x12\x12.FileUpdateRequest\x1a\x06.Empty\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/files/update\x12B\n" +
 	"\n" +
-	"FileDelete\x12\x12.FileDeleteRequest\x1a\x06.Empty\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/files/deleteB\rZ\vproto/filesb\x06proto3"
+	"FileDelete\x12\x12.FileDeleteRequest\x1a\x06.Empty\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/files/delete\x12G\n" +
+	"\bFileRead\x12\x10.FileReadRequest\x1a\x11.FileReadResponse\"\x16\x82\xd3\xe4\x93\x02\x10:\x01*\"\v/files/readB\rZ\vproto/filesb\x06proto3"
 
 var (
 	file_files_service_proto_rawDescOnce sync.Once
@@ -381,34 +759,42 @@ func file_files_service_proto_rawDescGZIP() []byte {
 	return file_files_service_proto_rawDescData
 }
 
-var file_files_service_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_files_service_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_files_service_proto_goTypes = []any{
 	(*Empty)(nil),               // 0: Empty
-	(*FolderDeleteRequest)(nil), // 1: FolderDeleteRequest
+	(*FolderCreateRequest)(nil), // 1: FolderCreateRequest
 	(*FolderUpdateRequest)(nil), // 2: FolderUpdateRequest
-	(*FolderCreateRequest)(nil), // 3: FolderCreateRequest
-	(*FileDeleteRequest)(nil),   // 4: FileDeleteRequest
-	(*FileUpdateRequest)(nil),   // 5: FileUpdateRequest
-	(*FileCreateRequest)(nil),   // 6: FileCreateRequest
+	(*FolderDeleteRequest)(nil), // 3: FolderDeleteRequest
+	(*FolderReadRequest)(nil),   // 4: FolderReadRequest
+	(*FolderReadResponse)(nil),  // 5: FolderReadResponse
+	(*FileDeleteRequest)(nil),   // 6: FileDeleteRequest
+	(*FileUpdateRequest)(nil),   // 7: FileUpdateRequest
+	(*FileCreateRequest)(nil),   // 8: FileCreateRequest
+	(*FileReadRequest)(nil),     // 9: FileReadRequest
+	(*FileReadResponse)(nil),    // 10: FileReadResponse
 }
 var file_files_service_proto_depIdxs = []int32{
-	3, // 0: FilesService.FolderCreate:input_type -> FolderCreateRequest
-	2, // 1: FilesService.FolderUpdate:input_type -> FolderUpdateRequest
-	1, // 2: FilesService.FolderDelete:input_type -> FolderDeleteRequest
-	6, // 3: FilesService.FileCreate:input_type -> FileCreateRequest
-	5, // 4: FilesService.FileUpdate:input_type -> FileUpdateRequest
-	4, // 5: FilesService.FileDelete:input_type -> FileDeleteRequest
-	0, // 6: FilesService.FolderCreate:output_type -> Empty
-	0, // 7: FilesService.FolderUpdate:output_type -> Empty
-	0, // 8: FilesService.FolderDelete:output_type -> Empty
-	0, // 9: FilesService.FileCreate:output_type -> Empty
-	0, // 10: FilesService.FileUpdate:output_type -> Empty
-	0, // 11: FilesService.FileDelete:output_type -> Empty
-	6, // [6:12] is the sub-list for method output_type
-	0, // [0:6] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	1,  // 0: FilesService.FolderCreate:input_type -> FolderCreateRequest
+	2,  // 1: FilesService.FolderUpdate:input_type -> FolderUpdateRequest
+	3,  // 2: FilesService.FolderDelete:input_type -> FolderDeleteRequest
+	4,  // 3: FilesService.FolderRead:input_type -> FolderReadRequest
+	8,  // 4: FilesService.FileCreate:input_type -> FileCreateRequest
+	7,  // 5: FilesService.FileUpdate:input_type -> FileUpdateRequest
+	6,  // 6: FilesService.FileDelete:input_type -> FileDeleteRequest
+	9,  // 7: FilesService.FileRead:input_type -> FileReadRequest
+	0,  // 8: FilesService.FolderCreate:output_type -> Empty
+	0,  // 9: FilesService.FolderUpdate:output_type -> Empty
+	0,  // 10: FilesService.FolderDelete:output_type -> Empty
+	5,  // 11: FilesService.FolderRead:output_type -> FolderReadResponse
+	0,  // 12: FilesService.FileCreate:output_type -> Empty
+	0,  // 13: FilesService.FileUpdate:output_type -> Empty
+	0,  // 14: FilesService.FileDelete:output_type -> Empty
+	10, // 15: FilesService.FileRead:output_type -> FileReadResponse
+	8,  // [8:16] is the sub-list for method output_type
+	0,  // [0:8] is the sub-list for method input_type
+	0,  // [0:0] is the sub-list for extension type_name
+	0,  // [0:0] is the sub-list for extension extendee
+	0,  // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_files_service_proto_init() }
@@ -422,7 +808,7 @@ func file_files_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_files_service_proto_rawDesc), len(file_files_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   7,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
