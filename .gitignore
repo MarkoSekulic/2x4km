@@ -34,3 +34,4 @@ db_data
 # Editor/IDE
 # .idea/
 # .vscode/
+node_modules
