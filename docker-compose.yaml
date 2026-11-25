@@ -75,7 +75,42 @@ services:
       - users_db_configdb:/data/configdb
       - users_db_mongot:/data/mongot
     attach: false
-    
+
+
+  files-service:
+    build: 
+      context: backend
+      args:
+        - CURRENT_DIRECTORY=files-service
+    ports:
+      - "${FILES_SERVICE_PORT-}:${SERVICE_PORT}"
+    networks:
+      - backend_net
+      - files_net
+    env_file:
+      - backend/files-service/.env
+    environment:
+      - MONGODB_ADDR=mongodb://${DB_ROOT_USERNAME}:${DB_ROOT_PASSWORD}@files-mongodb:27017
+    depends_on:
+      files-mongodb:
+        condition: service_healthy
+
+  files-mongodb:
+    image: mongodb/mongodb-atlas-local
+    hostname: files-mongodb
+    environment:
+      - MONGODB_INITDB_ROOT_USERNAME=${DB_ROOT_USERNAME}
+      - MONGODB_INITDB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+    ports:
+      - "${FILES_DB_PORT-}:27017"
+    networks:
+      - files_net
+    volumes:
+      - ./db_init/files:/docker-entrypoint-initdb.d
+      - files_db_data:/data/db
+      - files_db_configdb:/data/configdb
+      - files_db_mongot:/data/mongot
+    attach: false    
     
   mailhog:
     image: mailhog/mailhog:latest
@@ -91,21 +126,41 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: ${PWD}/db_data/user/data
+      device: ${PWD}/db_data/users/data
   users_db_configdb:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: ${PWD}/db_data/user/configdb
+      device: ${PWD}/db_data/users/configdb
   users_db_mongot:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: ${PWD}/db_data/user/mongot
+      device: ${PWD}/db_data/users/mongot
+
+  files_db_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/db_data/files/data
+  files_db_configdb:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/db_data/files/configdb
+  files_db_mongot:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/db_data/files/mongot
 
 networks:
   backend_net:
   users_net:
   mail_net:
+  files_net:

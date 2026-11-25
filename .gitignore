@@ -35,3 +35,4 @@ db_data
 # .idea/
 # .vscode/
 node_modules
+.vscode/settings.json
