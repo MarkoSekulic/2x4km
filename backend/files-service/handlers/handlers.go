@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"2x4km/files/config"
 	"2x4km/files/repo"
 	"context"
 	"errors"
+	"jwtauthenticator"
 	"strings"
 	"time"
 
@@ -26,10 +28,11 @@ const maxNameLen = 255
 type FilesHandler struct {
 	files.UnimplementedFilesServiceServer
 	repo *repo.FilesRepository
+	cfg  *config.HandlerConfig
 }
 
-func InitFilesHandler(repo *repo.FilesRepository) FilesHandler {
-	return FilesHandler{repo: repo}
+func InitFilesHandler(repo *repo.FilesRepository, cfg *config.HandlerConfig) FilesHandler {
+	return FilesHandler{repo: repo, cfg: cfg}
 }
 
 // ---------------------------------------------------------------------------
@@ -37,7 +40,13 @@ func InitFilesHandler(repo *repo.FilesRepository) FilesHandler {
 // ---------------------------------------------------------------------------
 
 func (h FilesHandler) FolderCreate(ctx context.Context, request *files.FolderCreateRequest) (*files.Empty, error) {
-	if err := h.createNode(ctx, FOLDER_COLLECTION, request.Name, request.ParentId, request.UserId); err != nil {
+
+	user, err := jwtauthenticator.RetriveValidUser(ctx, h.cfg.JWTPublicKey)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := h.createNode(ctx, FOLDER_COLLECTION, request.Name, request.ParentId, user["id"].(string)); err != nil {
 		return nil, err
 	}
 	return &files.Empty{}, nil
@@ -401,7 +410,12 @@ func (h FilesHandler) FolderRead(ctx context.Context, request *files.FolderReadR
 }
 
 func (h FilesHandler) FileCreate(ctx context.Context, request *files.FileCreateRequest) (*files.Empty, error) {
-	if err := h.createNode(ctx, FILE_COLLECTION, request.Name, request.ParentId, request.UserId); err != nil {
+	user, err := jwtauthenticator.RetriveValidUser(ctx, h.cfg.JWTPublicKey)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := h.createNode(ctx, FILE_COLLECTION, request.Name, request.ParentId, user["id"].(string)); err != nil {
 		return nil, err
 	}
 	return &files.Empty{}, nil

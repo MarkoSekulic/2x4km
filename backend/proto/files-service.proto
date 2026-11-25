@@ -69,7 +69,6 @@ message Empty{
 message FolderCreateRequest {
   string name = 1;
   string parent_id = 2;
-  string user_id = 3;
 }
 
 message FolderUpdateRequest {
@@ -113,7 +112,6 @@ message FileUpdateRequest {
 message FileCreateRequest {
   string name = 2;
   string parent_id = 3;
-  string user_id = 4;
 }
 
 message FileReadRequest {
