@@ -22,6 +22,7 @@ const (
 	UsersService_RegisterPreVerify_FullMethodName = "/UsersService/RegisterPreVerify"
 	UsersService_Register_FullMethodName          = "/UsersService/Register"
 	UsersService_Login_FullMethodName             = "/UsersService/Login"
+	UsersService_TFALogin_FullMethodName          = "/UsersService/TFALogin"
 )
 
 // UsersServiceClient is the client API for UsersService service.
@@ -30,7 +31,8 @@ const (
 type UsersServiceClient interface {
 	RegisterPreVerify(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*Empty, error)
 	Register(ctx context.Context, in *VerifyRequest, opts ...grpc.CallOption) (*Empty, error)
-	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*Empty, error)
+	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*TFATokenResponse, error)
+	TFALogin(ctx context.Context, in *TFALoginRequest, opts ...grpc.CallOption) (*Empty, error)
 }
 
 type usersServiceClient struct {
@@ -61,10 +63,20 @@ func (c *usersServiceClient) Register(ctx context.Context, in *VerifyRequest, op
 	return out, nil
 }
 
-func (c *usersServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*Empty, error) {
+func (c *usersServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*TFATokenResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TFATokenResponse)
+	err := c.cc.Invoke(ctx, UsersService_Login_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *usersServiceClient) TFALogin(ctx context.Context, in *TFALoginRequest, opts ...grpc.CallOption) (*Empty, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, UsersService_Login_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, UsersService_TFALogin_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +89,8 @@ func (c *usersServiceClient) Login(ctx context.Context, in *LoginRequest, opts .
 type UsersServiceServer interface {
 	RegisterPreVerify(context.Context, *RegisterRequest) (*Empty, error)
 	Register(context.Context, *VerifyRequest) (*Empty, error)
-	Login(context.Context, *LoginRequest) (*Empty, error)
+	Login(context.Context, *LoginRequest) (*TFATokenResponse, error)
+	TFALogin(context.Context, *TFALoginRequest) (*Empty, error)
 	mustEmbedUnimplementedUsersServiceServer()
 }
 
@@ -94,8 +107,11 @@ func (UnimplementedUsersServiceServer) RegisterPreVerify(context.Context, *Regis
 func (UnimplementedUsersServiceServer) Register(context.Context, *VerifyRequest) (*Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Register not implemented")
 }
-func (UnimplementedUsersServiceServer) Login(context.Context, *LoginRequest) (*Empty, error) {
+func (UnimplementedUsersServiceServer) Login(context.Context, *LoginRequest) (*TFATokenResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method Login not implemented")
+}
+func (UnimplementedUsersServiceServer) TFALogin(context.Context, *TFALoginRequest) (*Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method TFALogin not implemented")
 }
 func (UnimplementedUsersServiceServer) mustEmbedUnimplementedUsersServiceServer() {}
 func (UnimplementedUsersServiceServer) testEmbeddedByValue()                      {}
@@ -172,6 +188,24 @@ func _UsersService_Login_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UsersService_TFALogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TFALoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersServiceServer).TFALogin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UsersService_TFALogin_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersServiceServer).TFALogin(ctx, req.(*TFALoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UsersService_ServiceDesc is the grpc.ServiceDesc for UsersService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +224,10 @@ var UsersService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Login",
 			Handler:    _UsersService_Login_Handler,
+		},
+		{
+			MethodName: "TFALogin",
+			Handler:    _UsersService_TFALogin_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

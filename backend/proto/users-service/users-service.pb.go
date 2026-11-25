@@ -222,6 +222,102 @@ func (x *VerifyRequest) GetVerifyId() string {
 	return ""
 }
 
+type TFALoginRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TFAToken      string                 `protobuf:"bytes,1,opt,name=TFAToken,proto3" json:"TFAToken,omitempty"`
+	Passkey       string                 `protobuf:"bytes,2,opt,name=passkey,proto3" json:"passkey,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TFALoginRequest) Reset() {
+	*x = TFALoginRequest{}
+	mi := &file_users_service_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TFALoginRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TFALoginRequest) ProtoMessage() {}
+
+func (x *TFALoginRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_users_service_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TFALoginRequest.ProtoReflect.Descriptor instead.
+func (*TFALoginRequest) Descriptor() ([]byte, []int) {
+	return file_users_service_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *TFALoginRequest) GetTFAToken() string {
+	if x != nil {
+		return x.TFAToken
+	}
+	return ""
+}
+
+func (x *TFALoginRequest) GetPasskey() string {
+	if x != nil {
+		return x.Passkey
+	}
+	return ""
+}
+
+type TFATokenResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	TFAToken      string                 `protobuf:"bytes,1,opt,name=TFAToken,proto3" json:"TFAToken,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TFATokenResponse) Reset() {
+	*x = TFATokenResponse{}
+	mi := &file_users_service_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TFATokenResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TFATokenResponse) ProtoMessage() {}
+
+func (x *TFATokenResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_users_service_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TFATokenResponse.ProtoReflect.Descriptor instead.
+func (*TFATokenResponse) Descriptor() ([]byte, []int) {
+	return file_users_service_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *TFATokenResponse) GetTFAToken() string {
+	if x != nil {
+		return x.TFAToken
+	}
+	return ""
+}
+
 var File_users_service_proto protoreflect.FileDescriptor
 
 const file_users_service_proto_rawDesc = "" +
@@ -237,11 +333,17 @@ const file_users_service_proto_rawDesc = "" +
 	"\x05email\x18\x01 \x01(\tR\x05email\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\"+\n" +
 	"\rVerifyRequest\x12\x1a\n" +
-	"\bverifyId\x18\x01 \x01(\tR\bverifyId2\xd5\x01\n" +
+	"\bverifyId\x18\x01 \x01(\tR\bverifyId\"G\n" +
+	"\x0fTFALoginRequest\x12\x1a\n" +
+	"\bTFAToken\x18\x01 \x01(\tR\bTFAToken\x12\x18\n" +
+	"\apasskey\x18\x02 \x01(\tR\apasskey\".\n" +
+	"\x10TFATokenResponse\x12\x1a\n" +
+	"\bTFAToken\x18\x01 \x01(\tR\bTFAToken2\xac\x02\n" +
 	"\fUsersService\x12H\n" +
 	"\x11RegisterPreVerify\x12\x10.RegisterRequest\x1a\x06.Empty\"\x19\x82\xd3\xe4\x93\x02\x13:\x01*\"\x0e/user/register\x12C\n" +
-	"\bRegister\x12\x0e.VerifyRequest\x1a\x06.Empty\"\x1f\x82\xd3\xe4\x93\x02\x19\x12\x17/user/verify/{verifyId}\x126\n" +
-	"\x05Login\x12\r.LoginRequest\x1a\x06.Empty\"\x16\x82\xd3\xe4\x93\x02\x10:\x01*\"\v/user/loginB\rZ\vproto/usersb\x06proto3"
+	"\bRegister\x12\x0e.VerifyRequest\x1a\x06.Empty\"\x1f\x82\xd3\xe4\x93\x02\x19\x12\x17/user/verify/{verifyId}\x12A\n" +
+	"\x05Login\x12\r.LoginRequest\x1a\x11.TFATokenResponse\"\x16\x82\xd3\xe4\x93\x02\x10:\x01*\"\v/user/login\x12J\n" +
+	"\bTFALogin\x12\x10.TFALoginRequest\x1a\x06.Empty\"$\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/user/TFALogin/{TFAToken}B\rZ\vproto/usersb\x06proto3"
 
 var (
 	file_users_service_proto_rawDescOnce sync.Once
@@ -255,22 +357,26 @@ func file_users_service_proto_rawDescGZIP() []byte {
 	return file_users_service_proto_rawDescData
 }
 
-var file_users_service_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_users_service_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_users_service_proto_goTypes = []any{
-	(*Empty)(nil),           // 0: Empty
-	(*RegisterRequest)(nil), // 1: RegisterRequest
-	(*LoginRequest)(nil),    // 2: LoginRequest
-	(*VerifyRequest)(nil),   // 3: VerifyRequest
+	(*Empty)(nil),            // 0: Empty
+	(*RegisterRequest)(nil),  // 1: RegisterRequest
+	(*LoginRequest)(nil),     // 2: LoginRequest
+	(*VerifyRequest)(nil),    // 3: VerifyRequest
+	(*TFALoginRequest)(nil),  // 4: TFALoginRequest
+	(*TFATokenResponse)(nil), // 5: TFATokenResponse
 }
 var file_users_service_proto_depIdxs = []int32{
 	1, // 0: UsersService.RegisterPreVerify:input_type -> RegisterRequest
 	3, // 1: UsersService.Register:input_type -> VerifyRequest
 	2, // 2: UsersService.Login:input_type -> LoginRequest
-	0, // 3: UsersService.RegisterPreVerify:output_type -> Empty
-	0, // 4: UsersService.Register:output_type -> Empty
-	0, // 5: UsersService.Login:output_type -> Empty
-	3, // [3:6] is the sub-list for method output_type
-	0, // [0:3] is the sub-list for method input_type
+	4, // 3: UsersService.TFALogin:input_type -> TFALoginRequest
+	0, // 4: UsersService.RegisterPreVerify:output_type -> Empty
+	0, // 5: UsersService.Register:output_type -> Empty
+	5, // 6: UsersService.Login:output_type -> TFATokenResponse
+	0, // 7: UsersService.TFALogin:output_type -> Empty
+	4, // [4:8] is the sub-list for method output_type
+	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -287,7 +393,7 @@ func file_users_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_users_service_proto_rawDesc), len(file_users_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

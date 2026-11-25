@@ -16,9 +16,15 @@ service UsersService {
       get: "/user/verify/{verifyId}"
     };
   }
-  rpc Login(LoginRequest) returns (Empty) {
+  rpc Login(LoginRequest) returns (TFATokenResponse) {
     option (google.api.http) = {
       post: "/user/login"
+      body: "*"
+    };
+  }
+  rpc TFALogin(TFALoginRequest) returns (Empty) {
+    option (google.api.http) = {
+      post: "/user/TFALogin/{TFAToken}"
       body: "*"
     };
   }
@@ -40,4 +46,13 @@ message LoginRequest {
 
 message VerifyRequest {
   string verifyId = 1;
+}
+
+message TFALoginRequest {
+  string TFAToken = 1;
+  string passkey = 2;
+}
+
+message TFATokenResponse {
+  string TFAToken = 1;
 }
