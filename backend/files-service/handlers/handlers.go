@@ -5,7 +5,7 @@ import (
 	"2x4km/files/repo"
 	"context"
 	"errors"
-	"jwtauthenticator"
+	"shared/jwtauthenticator"
 	"strings"
 	"time"
 
@@ -725,6 +725,59 @@ func (h FilesHandler) FileRead(ctx context.Context, request *files.FileReadReque
 		Ver:       file.Ver,
 		Osid:      file.OSID,
 	}, nil
+}
+
+func (h FilesHandler) InnerRootCreate(ctx context.Context, request *files.InnerRootCreateRequest) (*files.Empty, error) {
+
+	session, err := h.repo.Client().StartSession()
+	if err != nil {
+		return nil, status.Error(codes.Unavailable, "files-db")
+	}
+	defer session.EndSession(ctx)
+
+	userId, err := primitive.ObjectIDFromHex(request.UserId)
+	if err != nil {
+		return nil, err
+	}
+
+	txCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	_, err = session.WithTransaction(txCtx, func(dbCtx mongo.SessionContext) (interface{}, error) {
+		res, err := h.repo.Collection(ROOT_COLLECTION).InsertOne(dbCtx, &bson.M{
+			"_id":             userId,
+			"user_id":         request.UserId,
+			"user_first_name": request.FirstName,
+			"user_last_name":  request.LastName,
+			"root_folder_id":  primitive.NewObjectID(),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		res, err = h.repo.Collection(FOLDER_COLLECTION).InsertOne(dbCtx, &bson.M{
+			"name":          "root",
+			"parent":        &primitive.Null{},
+			"root":          res.InsertedID, // root id
+			"child_folders": &bson.A{},
+			"files":         &bson.A{},
+			"created_at":    time.Now().UTC(),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		_, err = h.repo.Collection(ROOT_COLLECTION).UpdateByID(dbCtx, userId, &bson.M{
+			"root_folder_id": res.InsertedID, // root folder id
+		})
+		if err != nil {
+			return nil, err
+		}
+		return true, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &files.Empty{}, nil
 }
 
 // ---------------------------------------------------------------------------

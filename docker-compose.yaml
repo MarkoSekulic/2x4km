@@ -24,6 +24,7 @@ services:
     environment:
       - TEMPLATE_SERVICE_ADDRESS=template-service:${SERVICE_PORT}
       - USERS_SERVICE_ADDRESS=users-service:${SERVICE_PORT}
+      - FILES_SERVICE_ADDRESS=files-service:${SERVICE_PORT}
     healthcheck: { disable: true }
 
   template-service:
@@ -65,6 +66,7 @@ services:
     environment:
       - MONGODB_INITDB_ROOT_USERNAME=${DB_ROOT_USERNAME}
       - MONGODB_INITDB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
+      - FILES_SERVICE_ADDRESS=files-service:${SERVICE_PORT}
     ports:
       - "${USERS_DB_PORT-}:27017"
     networks:

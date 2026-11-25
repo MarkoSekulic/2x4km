@@ -60,6 +60,10 @@ service FilesService {
       body: "*"
     };
   }
+
+  rpc InnerRootCreate(InnerRootCreateRequest) returns (Empty){
+
+  }
 }
 
 message Empty{
@@ -127,4 +131,11 @@ message FileReadResponse {
   string edited = 6;
   int64 ver = 7;
   string osid = 8;
+}
+
+message InnerRootCreateRequest {
+  string user_id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  
 }

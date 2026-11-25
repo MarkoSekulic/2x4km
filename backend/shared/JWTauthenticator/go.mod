@@ -1,4 +1,4 @@
-module jwtauthenticator
+module shared/jwtauthenticator
 
 go 1.26.10
 
