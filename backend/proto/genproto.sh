@@ -10,3 +10,9 @@ protoc\
   --grpc-gateway_out=./users-service \
   --grpc-gateway_opt=paths=source_relative \
   users-service.proto
+protoc\
+  --go_out=./notifications-service --go_opt=paths=source_relative \
+  --go-grpc_out=./notifications-service --go-grpc_opt=paths=source_relative \
+  --grpc-gateway_out=./notifications-service \
+  --grpc-gateway_opt=paths=source_relative \
+  notifications-service.proto
