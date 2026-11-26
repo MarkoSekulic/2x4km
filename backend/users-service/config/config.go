@@ -2,7 +2,7 @@ package config
 
 import (
 	"os"
-	"smtp"
+	"shared/smtp"
 	"strconv"
 )
 
@@ -19,7 +19,8 @@ type UserConfig struct {
 }
 
 type Config struct {
-	Address string
+	Address      string
+	FilesAddress string
 	DBConfig
 	UserConfig
 	SMTPConfig smtp.Config
@@ -35,7 +36,8 @@ func getEnvInt(env string, defaultVal int) int {
 
 func GetConfig() Config {
 	return Config{
-		Address: os.Getenv("SERVICE_PORT"),
+		Address:      os.Getenv("SERVICE_PORT"),
+		FilesAddress: os.Getenv("FILES_SERVICE_ADDRESS"),
 		DBConfig: DBConfig{
 			Address: os.Getenv("MONGODB_ADDR"),
 			MinPool: uint64(getEnvInt("DB_MIN_POOL", 0)),

@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"2x4km/files/config"
 	"2x4km/files/repo"
 	"context"
 	"errors"
+	"shared/jwtauthenticator"
 	"strings"
 	"time"
 
@@ -26,10 +28,11 @@ const maxNameLen = 255
 type FilesHandler struct {
 	files.UnimplementedFilesServiceServer
 	repo *repo.FilesRepository
+	cfg  *config.HandlerConfig
 }
 
-func InitFilesHandler(repo *repo.FilesRepository) FilesHandler {
-	return FilesHandler{repo: repo}
+func InitFilesHandler(repo *repo.FilesRepository, cfg *config.HandlerConfig) FilesHandler {
+	return FilesHandler{repo: repo, cfg: cfg}
 }
 
 // ---------------------------------------------------------------------------
@@ -37,7 +40,13 @@ func InitFilesHandler(repo *repo.FilesRepository) FilesHandler {
 // ---------------------------------------------------------------------------
 
 func (h FilesHandler) FolderCreate(ctx context.Context, request *files.FolderCreateRequest) (*files.Empty, error) {
-	if err := h.createNode(ctx, FOLDER_COLLECTION, request.Name, request.ParentId, request.UserId); err != nil {
+
+	user, err := jwtauthenticator.RetriveValidUser(ctx, h.cfg.JWTPublicKey)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := h.createNode(ctx, FOLDER_COLLECTION, request.Name, request.ParentId, user["id"].(string)); err != nil {
 		return nil, err
 	}
 	return &files.Empty{}, nil
@@ -401,7 +410,12 @@ func (h FilesHandler) FolderRead(ctx context.Context, request *files.FolderReadR
 }
 
 func (h FilesHandler) FileCreate(ctx context.Context, request *files.FileCreateRequest) (*files.Empty, error) {
-	if err := h.createNode(ctx, FILE_COLLECTION, request.Name, request.ParentId, request.UserId); err != nil {
+	user, err := jwtauthenticator.RetriveValidUser(ctx, h.cfg.JWTPublicKey)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := h.createNode(ctx, FILE_COLLECTION, request.Name, request.ParentId, user["id"].(string)); err != nil {
 		return nil, err
 	}
 	return &files.Empty{}, nil
@@ -711,6 +725,61 @@ func (h FilesHandler) FileRead(ctx context.Context, request *files.FileReadReque
 		Ver:       file.Ver,
 		Osid:      file.OSID,
 	}, nil
+}
+
+func (h FilesHandler) InnerRootCreate(ctx context.Context, request *files.InnerRootCreateRequest) (*files.Empty, error) {
+
+	session, err := h.repo.Client().StartSession()
+	if err != nil {
+		return nil, status.Error(codes.Unavailable, "files-db")
+	}
+	defer session.EndSession(ctx)
+
+	userId, err := primitive.ObjectIDFromHex(request.UserId)
+	if err != nil {
+		return nil, err
+	}
+
+	txCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	_, err = session.WithTransaction(txCtx, func(dbCtx mongo.SessionContext) (interface{}, error) {
+		res, err := h.repo.Collection(ROOT_COLLECTION).InsertOne(dbCtx, &bson.M{
+			"_id":             userId,
+			"user_id":         request.UserId,
+			"user_first_name": request.FirstName,
+			"user_last_name":  request.LastName,
+			"root_folder_id":  primitive.NewObjectID(),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		res, err = h.repo.Collection(FOLDER_COLLECTION).InsertOne(dbCtx, &bson.M{
+			"name":          "root",
+			"parent":        &primitive.Null{},
+			"root":          res.InsertedID, // root id
+			"child_folders": &bson.A{},
+			"files":         &bson.A{},
+			"created_at":    time.Now().UTC(),
+		})
+		if err != nil {
+			return nil, err
+		}
+
+		_, err = h.repo.Collection(ROOT_COLLECTION).UpdateByID(dbCtx, userId, &bson.M{
+			"$set": &bson.M{
+				"root_folder_id": res.InsertedID, // root folder id
+			},
+		})
+		if err != nil {
+			return nil, err
+		}
+		return true, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &files.Empty{}, nil
 }
 
 // ---------------------------------------------------------------------------
