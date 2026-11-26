@@ -1,0 +1,132 @@
+syntax = "proto3";
+
+option go_package = "proto/files";
+
+import "google/api/annotations.proto";
+
+service FilesService {
+  rpc FolderCreate(FolderCreateRequest) returns (Empty){
+    option (google.api.http) = {
+      post: "/folders/create"
+      body: "*"
+    };
+  }
+
+  rpc FolderUpdate(FolderUpdateRequest) returns (Empty){
+    option (google.api.http) = {
+      post: "/folders/update"
+      body: "*"
+    };
+  }
+
+  rpc FolderDelete(FolderDeleteRequest) returns (Empty){
+    option (google.api.http) = {
+      post: "/folders/delete"
+      body: "*"
+    };
+  }
+
+  rpc FolderRead(FolderReadRequest) returns (FolderReadResponse){
+    option (google.api.http) = {
+      post: "/folders/read"
+      body: "*"
+    };
+  }
+
+  rpc FileCreate(FileCreateRequest) returns (Empty){
+    option (google.api.http) = {
+      post: "/files/create"
+      body: "*"
+    };
+  }
+
+  rpc FileUpdate(FileUpdateRequest) returns (Empty){
+    option (google.api.http) = {
+      post: "/files/update"
+      body: "*"
+    };
+  }
+
+  rpc FileDelete(FileDeleteRequest) returns (Empty){
+    option (google.api.http) = {
+      post: "/files/delete"
+      body: "*"
+    };
+  }
+
+  rpc FileRead(FileReadRequest) returns (FileReadResponse){
+    option (google.api.http) = {
+      post: "/files/read"
+      body: "*"
+    };
+  }
+}
+
+message Empty{
+
+}
+
+message FolderCreateRequest {
+  string name = 1;
+  string parent_id = 2;
+  string user_id = 3;
+}
+
+message FolderUpdateRequest {
+  string id = 1;
+  string new_name = 2;
+  string new_parent_id = 3;
+}
+
+message FolderDeleteRequest {
+  string id = 1;
+}
+
+message FolderReadRequest {
+  string id = 1;
+
+}
+
+message FolderReadResponse {
+  string id = 1;
+  string name = 2;
+  string parent_id = 3;
+  string root = 4;
+  repeated string child_folders = 5;
+  repeated string files = 6;
+  string created_at = 7;
+  string edited = 8;
+  int64 ver = 9;
+}
+
+
+message FileDeleteRequest {
+  string id = 1;
+}
+
+message FileUpdateRequest {
+  string id = 1;
+  string new_name = 2;
+  string new_parent_id = 3;
+}
+
+message FileCreateRequest {
+  string name = 2;
+  string parent_id = 3;
+  string user_id = 4;
+}
+
+message FileReadRequest {
+  string id = 1;
+}
+
+message FileReadResponse {
+  string id = 1;
+  string name = 2;
+  string parent_id = 3;
+  string root = 4;
+  string created_at = 5;
+  string edited = 6;
+  int64 ver = 7;
+  string osid = 8;
+}
