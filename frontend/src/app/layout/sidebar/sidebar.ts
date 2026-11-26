@@ -1,5 +1,4 @@
-
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 import {
@@ -11,6 +10,7 @@ import {
   LucideTrash2,
   LucideSettings
 } from '@lucide/angular';
+import { UserStore } from '../../util/user.store'; // Adjust path as needed
 
 @Component({
   selector: 'app-sidebar',
@@ -88,14 +88,14 @@ import {
         <div class="storage-card">
           <div class="storage-header">
             <span>Storage</span>
-            <span>65%</span>
+            <span>{{ storageLabel() }}</span>
           </div>
 
           <div class="storage-progress">
-            <div class="storage-progress-fill"></div>
+            <div class="storage-progress-fill" [style.width.%]="0"></div>
           </div>
 
-          <p>6.5 GB of 10 GB used</p>
+          <p>0 MB of {{ storageLabel() }} used</p>
         </div>
       </div>
 
@@ -103,4 +103,19 @@ import {
   `,
   styleUrl: './sidebar.css'
 })
-export class SidebarComponent {}
+export class SidebarComponent {
+  protected readonly userStore = inject(UserStore);
+
+  // Formats dataLimitMB from the JWT (e.g., 10240 -> "10 GB", 500 -> "500 MB", null -> "Unlimited")
+  storageLabel = computed(() => {
+    const limitMB = this.userStore.user()?.dataLimitMB;
+    if (limitMB === null || limitMB === undefined) {
+      return 'Unlimited';
+    }
+    if (limitMB >= 1024) {
+      const gb = +(limitMB / 1024).toFixed(1);
+      return `${gb} GB`;
+    }
+    return `${limitMB} MB`;
+  });
+}

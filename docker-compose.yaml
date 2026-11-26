@@ -25,6 +25,7 @@ services:
       - TEMPLATE_SERVICE_ADDRESS=template-service:${SERVICE_PORT}
       - USERS_SERVICE_ADDRESS=users-service:${SERVICE_PORT}
       - FILES_SERVICE_ADDRESS=files-service:${SERVICE_PORT}
+      - NOTIFICATIONS_SERVICE_ADDRESS=notifications-service:${SERVICE_PORT}
     healthcheck: { disable: true }
 
   template-service:
