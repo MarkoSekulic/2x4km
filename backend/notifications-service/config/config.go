@@ -2,7 +2,7 @@ package config
 
 import (
 	"os"
-	"smtp"
+	"shared/smtp"
 	"strconv"
 )
 
