@@ -74,7 +74,7 @@ func RegisterTemplateServiceHandlerServer(ctx context.Context, mux *runtime.Serv
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.TemplateService/Greet", runtime.WithHTTPPathPattern("/greet"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/template.TemplateService/Greet", runtime.WithHTTPPathPattern("/greet"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -132,7 +132,7 @@ func RegisterTemplateServiceHandlerClient(ctx context.Context, mux *runtime.Serv
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.TemplateService/Greet", runtime.WithHTTPPathPattern("/greet"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/template.TemplateService/Greet", runtime.WithHTTPPathPattern("/greet"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return

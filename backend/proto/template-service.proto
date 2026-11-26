@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+package template;
 option go_package = "proto/template";
 
 import "google/api/annotations.proto";

@@ -12,7 +12,8 @@ import (
 	"net/http"
 	"proto/users-service"
 	"regexp"
-	"smtp"
+	"shared/proto/files"
+	"shared/smtp"
 	"strconv"
 	"time"
 
@@ -29,7 +30,8 @@ import (
 )
 
 type HandlerUtils struct {
-	SmtpClient *smtp.Client
+	SmtpClient  *smtp.Client
+	FilesClient files.FilesServiceClient
 }
 
 type UsersHandler struct {
@@ -122,7 +124,7 @@ func (h UsersHandler) Register(ctx context.Context, request *users.VerifyRequest
 		return nil, status.Error(codes.Unavailable, "users-db")
 	}
 
-	userDoc, err := session.WithTransaction(ctx, func(dbCtx mongo.SessionContext) (interface{}, error) {
+	res, err := session.WithTransaction(ctx, func(dbCtx mongo.SessionContext) (interface{}, error) {
 		var resDoc bson.M
 		// Verification Collection
 		err = h.repo.Collection(VERIFICATION_COLLECTION).FindOne(dbCtx, bson.M{"_id": verifyId}).Decode(&resDoc)
@@ -153,9 +155,16 @@ func (h UsersHandler) Register(ctx context.Context, request *users.VerifyRequest
 	}
 
 	// CQRS send userID to other services that need them
-	userDoc = userDoc.(bson.M)
+	userDoc := res.(bson.M)
 
-	// TODO MOVE TO LOGIN
+	_, err = h.utils.FilesClient.InnerRootCreate(ctx, &files.InnerRootCreateRequest{
+		UserId:    userDoc["_id"].(primitive.ObjectID).Hex(),
+		FirstName: userDoc["firstName"].(string),
+		LastName:  userDoc["lastName"].(string),
+	})
+	if err != nil {
+		return nil, err
+	}
 
 	return &users.Empty{}, nil
 }

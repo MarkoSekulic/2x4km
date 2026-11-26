@@ -4,7 +4,7 @@ go 1.26.0
 
 require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.34.0
-	google.golang.org/genproto/googleapis/api v0.0.0-20261118221215-c8830f628b3f
+	google.golang.org/genproto/googleapis/api v0.0.0-20261123191846-1e707ab9fbc2
 	google.golang.org/grpc v1.85.0
 	google.golang.org/protobuf v1.36.12
 )

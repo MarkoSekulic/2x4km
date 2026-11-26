@@ -11,14 +11,29 @@ import (
 	"os"
 	"os/signal"
 	"proto/users-service"
-	"smtp"
+	"shared/proto/files"
+	"shared/smtp"
 	"syscall"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
 	"google.golang.org/grpc/reflection"
 )
+
+func dialConnection(addr string) *grpc.ClientConn {
+	conn, err := grpc.NewClient(
+		addr,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	)
+
+	if err != nil {
+		log.Fatalln("Failed to dial server:", err)
+	}
+
+	return conn
+}
 
 func main() {
 
@@ -44,7 +59,8 @@ func main() {
 	defer disconnectDB(ctx)
 
 	usersHandler := handlers.InitHandler(usersRepo, &cfg.UserConfig, handlers.HandlerUtils{
-		SmtpClient: smtp.New(cfg.SMTPConfig),
+		SmtpClient:  smtp.New(cfg.SMTPConfig),
+		FilesClient: files.NewFilesServiceClient(dialConnection(cfg.FilesAddress)),
 	})
 
 	// Bootstrap gRPC service server and respond to request.
