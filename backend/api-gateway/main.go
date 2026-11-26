@@ -14,6 +14,9 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/didip/tollbooth"
+	"github.com/didip/tollbooth/limiter"
+
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -68,6 +71,16 @@ func main() {
 	// gwhandler = middleware.RegisterLoggerMiddleware(gwhandler)
 	// gwhandler = middleware.RegisterLoggerMiddleware(gwhandler)
 	// ...
+
+	// Rate Limiter (10 per 10 second)
+	lmt := tollbooth.NewLimiter(1, &limiter.ExpirableOptions{
+		DefaultExpirationTTL: time.Hour,
+	}).
+		SetBurst(10).
+		SetIPLookups([]string{"X-Real-IP", "X-Forwarded-For", "RemoteAddr"}).
+		SetMessageContentType("application/json").
+		SetMessage(`{"code": 8, "message": "rate limit exceeded"}`)
+	gwhandler = tollbooth.LimitHandler(lmt, gwhandler)
 
 	gwServer := &http.Server{
 		Addr:    cfg.Address,
