@@ -157,12 +157,14 @@ func (h UsersHandler) Register(ctx context.Context, request *users.VerifyRequest
 	// CQRS send userID to other services that need them
 	userDoc := res.(bson.M)
 
-	h.utils.FilesClient.InnerRootCreate(ctx, &files.InnerRootCreateRequest{
+	_, err = h.utils.FilesClient.InnerRootCreate(ctx, &files.InnerRootCreateRequest{
 		UserId:    userDoc["_id"].(primitive.ObjectID).Hex(),
-		FirstName: userDoc["first_name"].(string),
-		LastName:  userDoc["last_name"].(string),
+		FirstName: userDoc["firstName"].(string),
+		LastName:  userDoc["lastName"].(string),
 	})
-	// TODO MOVE TO LOGIN
+	if err != nil {
+		return nil, err
+	}
 
 	return &users.Empty{}, nil
 }

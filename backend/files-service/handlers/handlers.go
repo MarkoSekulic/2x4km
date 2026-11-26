@@ -767,7 +767,9 @@ func (h FilesHandler) InnerRootCreate(ctx context.Context, request *files.InnerR
 		}
 
 		_, err = h.repo.Collection(ROOT_COLLECTION).UpdateByID(dbCtx, userId, &bson.M{
-			"root_folder_id": res.InsertedID, // root folder id
+			"$set": &bson.M{
+				"root_folder_id": res.InsertedID, // root folder id
+			},
 		})
 		if err != nil {
 			return nil, err

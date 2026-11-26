@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	TemplateService_Greet_FullMethodName = "/TemplateService/Greet"
+	TemplateService_Greet_FullMethodName = "/template.TemplateService/Greet"
 )
 
 // TemplateServiceClient is the client API for TemplateService service.
@@ -108,7 +108,7 @@ func _TemplateService_Greet_Handler(srv interface{}, ctx context.Context, dec fu
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var TemplateService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "TemplateService",
+	ServiceName: "template.TemplateService",
 	HandlerType: (*TemplateServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
