@@ -8,7 +8,6 @@ import { LayoutComponent } from './layout/layout';
   standalone: true,
   imports: [
     RouterOutlet,
-    LayoutComponent
   ],
   templateUrl: './app.html',
   styleUrl: './app.css'
