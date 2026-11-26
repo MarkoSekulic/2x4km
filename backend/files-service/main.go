@@ -42,7 +42,7 @@ func main() {
 	}
 	defer disconnectDB(ctx)
 
-	filesHandler := handlers.InitFilesHandler(filesRepo)
+	filesHandler := handlers.InitFilesHandler(filesRepo, &cfg.HandlerConfig)
 
 	// Bootstrap gRPC service server and respond to request.
 	grpc_health_v1.RegisterHealthServer(grpcServer, health.NewServer())

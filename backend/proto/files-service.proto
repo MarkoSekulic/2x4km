@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+package files;
 option go_package = "proto/files";
 
 import "google/api/annotations.proto";
@@ -60,6 +61,10 @@ service FilesService {
       body: "*"
     };
   }
+
+  rpc InnerRootCreate(InnerRootCreateRequest) returns (Empty){
+
+  }
 }
 
 message Empty{
@@ -69,7 +74,6 @@ message Empty{
 message FolderCreateRequest {
   string name = 1;
   string parent_id = 2;
-  string user_id = 3;
 }
 
 message FolderUpdateRequest {
@@ -113,7 +117,6 @@ message FileUpdateRequest {
 message FileCreateRequest {
   string name = 2;
   string parent_id = 3;
-  string user_id = 4;
 }
 
 message FileReadRequest {
@@ -129,4 +132,11 @@ message FileReadResponse {
   string edited = 6;
   int64 ver = 7;
   string osid = 8;
+}
+
+message InnerRootCreateRequest {
+  string user_id = 1;
+  string first_name = 2;
+  string last_name = 3;
+  
 }

@@ -11,8 +11,13 @@ type DBConfig struct {
 	MaxPool uint64
 }
 
+type HandlerConfig struct {
+	JWTPublicKey string
+}
+
 type Config struct {
 	Address string
+	HandlerConfig
 	DBConfig
 }
 
@@ -31,6 +36,9 @@ func GetConfig() Config {
 			Address: os.Getenv("MONGODB_ADDR"),
 			MinPool: uint64(getEnvInt("DB_MIN_POOL", 0)),
 			MaxPool: uint64(getEnvInt("DB_MAX_POOL", 1)),
+		},
+		HandlerConfig: HandlerConfig{
+			JWTPublicKey: os.Getenv("JWT_PUBLIC_KEY"),
 		},
 	}
 }
