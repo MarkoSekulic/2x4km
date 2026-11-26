@@ -243,6 +243,8 @@ func (h UsersHandler) TFALogin(ctx context.Context, request *users.TFALoginReque
 		"firstName":   result["firstName"],
 		"lastName":    result["lastName"],
 		"dataLimitMB": result["dataLimitMB"],
+		"iat":         jwt.NewNumericDate(time.Now()),
+		"exp":         jwt.NewNumericDate(time.Now().Add(24 * time.Hour)),
 	}).SignedString(pk)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "Internal Key")

@@ -1,0 +1,46 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "proto/notifications";
+
+import "google/api/annotations.proto";
+
+service NotificationsService {
+
+  rpc Greet(Empty) returns (Empty) {
+    option (google.api.http) = {
+      get: "/notification/greet"
+    };
+  }
+  rpc GetNotifications(Empty) returns (NotificationsResponse) {
+    option (google.api.http) = {
+      get: "/notification/me"
+    };
+  }
+  rpc Notify(Empty) returns (Empty) {
+    option (google.api.http) = {
+      post: "/notification/notify"
+      body: "*"
+    };
+  }
+}
+
+message Empty {}
+
+message NotificationsResponse {
+  repeated Notification notifications = 1;
+}
+
+
+message Notification {
+  string user_id      = 1;
+  google.protobuf.Timestamp notified_at  = 2;
+  string type         = 3;  // "shared" | "added" | "updated"
+  string by_user_id   = 4;
+  string by_user_name = 5;
+  string f_type       = 6;  // "file" | "folder"
+  string f_id         = 7;
+  string f_name       = 8;
+  string added_f_id   = 9;  // empty when type != "added"
+  string added_f_name = 10; // empty when type != "added"
+}
