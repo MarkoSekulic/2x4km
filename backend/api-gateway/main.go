@@ -71,6 +71,7 @@ func main() {
 	// gwhandler = middleware.RegisterLoggerMiddleware(gwhandler)
 	// gwhandler = middleware.RegisterLoggerMiddleware(gwhandler)
 	// ...
+	gwhandler = middleware.CorsMiddleware(gwhandler)
 
 	// Rate Limiter (10 per 10 second)
 	lmt := tollbooth.NewLimiter(1, &limiter.ExpirableOptions{

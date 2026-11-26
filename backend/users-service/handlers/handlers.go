@@ -105,7 +105,7 @@ func (h UsersHandler) RegisterPreVerify(ctx context.Context, request *users.Regi
 		From:    "noreply@gmail.com",
 		To:      []string{request.Email},
 		Subject: "2x4km Account Verification",
-		Body:    "<a href='localhost:3000/user/verify/" + verificationID.Hex() + "' > Verify account here </a> ",
+		Body:    "<a href='localhost:4200/verify/" + verificationID.Hex() + "' > Verify account here </a> ",
 		IsHTML:  true,
 	})
 	if err != nil {
@@ -262,8 +262,8 @@ func (h UsersHandler) TFALogin(ctx context.Context, request *users.TFALoginReque
 		Name:     "session_token",
 		Value:    jwtToken,
 		Path:     "/",
-		HttpOnly: true,
-		Secure:   true,
+		HttpOnly: false,
+		Secure:   false,
 		SameSite: http.SameSiteLaxMode,
 	}
 	grpc.SendHeader(ctx, metadata.Pairs("set-cookie", cookie.String()))
@@ -286,7 +286,7 @@ func (h UsersHandler) PrePasswordReset(ctx context.Context, request *users.PrePa
 	if !ok || lastPassChangeDate == "" {
 		lastPassChangeDate = result["createdAt"]
 	}
-	if !lastPassChangeDate.(primitive.DateTime).Time().Before(time.Now().UTC().Add(-24 * time.Hour)) {
+	if !lastPassChangeDate.(primitive.DateTime).Time().Before(time.Now().UTC().Add(-2 * time.Minute)) {
 		return nil, status.Error(codes.FailedPrecondition, "passwords can be changed once per day")
 	}
 
@@ -311,7 +311,7 @@ func (h UsersHandler) PrePasswordReset(ctx context.Context, request *users.PrePa
 		From:    "noreply@gmail.com",
 		To:      []string{request.Email},
 		Subject: "2x4km Account Password Forgot ",
-		Body:    "<a href='localhost:3000/user/passForgot/" + PassForgotToken.Hex() + "' > Verify account here </a> ",
+		Body:    "<a href='localhost:4200/reset-password/" + PassForgotToken.Hex() + "' > Verify account here </a> ",
 		IsHTML:  true,
 	})
 	if err != nil {
@@ -341,7 +341,7 @@ func (h UsersHandler) PasswordReset(ctx context.Context, request *users.PassRese
 		return nil, status.Error(codes.Unauthenticated, "")
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(result["oldPasswordHash"].(string)), []byte(request.NewPassword))
-	if err != nil {
+	if err == nil {
 		return nil, status.Error(codes.Unauthenticated, "password can't be the same as previous")
 	}
 
