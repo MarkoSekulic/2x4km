@@ -39,6 +39,11 @@ export const routes: Routes = [
           {
             path: 'dashboard',
             component: DashboardComponent
+          },
+          {
+            path: 'files',
+            loadComponent: () =>
+              import('./pages/files/files').then((m) => m.Files)
           }
         ]
       }

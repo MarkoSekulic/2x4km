@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"proto/files-service"
 	"proto/notifications-service"
 	"proto/template-service"
 	"proto/users-service"
@@ -71,6 +72,16 @@ func main() {
 	if err != nil {
 		log.Fatalln("Failed to register gateway:", err)
 	}
+
+	// Register File
+	filesConn := dialConnection(cfg.FilesServiceAddress)
+	defer filesConn.Close()
+
+	err = files.RegisterFilesServiceHandlerClient(ctx, gwmux, files.NewFilesServiceClient(filesConn))
+	if err != nil {
+		log.Fatalln("Failed to register gateway:", err)
+	}
+
 	// Register Blank
 	// ...
 
@@ -82,11 +93,11 @@ func main() {
 	// ...
 	gwhandler = middleware.CorsMiddleware(gwhandler)
 
-	// Rate Limiter (10 per 10 second)
+	// Rate Limiter (100 per 10 second)
 	lmt := tollbooth.NewLimiter(1, &limiter.ExpirableOptions{
 		DefaultExpirationTTL: time.Hour,
 	}).
-		SetBurst(10).
+		SetBurst(100).
 		SetIPLookups([]string{"X-Real-IP", "X-Forwarded-For", "RemoteAddr"}).
 		SetMessageContentType("application/json").
 		SetMessage(`{"code": 8, "message": "rate limit exceeded"}`)

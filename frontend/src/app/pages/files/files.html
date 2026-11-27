@@ -1,0 +1,283 @@
+@if (showCreateFolder) {
+  <div class="modal-backdrop" (click)="closeCreateFolder()">
+    <div
+      class="modal"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="modal-header">
+        <h2>Create folder</h2>
+
+        <button
+          class="modal-close"
+          (click)="closeCreateFolder()"
+          [disabled]="isCreatingFolder"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <p class="modal-description">
+        Create a new folder in {{ currentFolder?.name }}.
+      </p>
+
+      <label for="folder-name">Folder name</label>
+
+      <input
+        id="folder-name"
+        type="text"
+        placeholder="Enter folder name"
+        [value]="newFolderName"
+        (input)="newFolderName = $any($event.target).value"
+        (keydown.enter)="createFolder()"
+        [disabled]="isCreatingFolder"
+        autofocus
+      />
+
+      @if (errorMessage) {
+        <p class="modal-error">{{ errorMessage }}</p>
+      }
+
+      <div class="modal-actions">
+        <button
+          class="cancel-button"
+          (click)="closeCreateFolder()"
+          [disabled]="isCreatingFolder"
+        >
+          Cancel
+        </button>
+
+        <button
+          class="action-button"
+          (click)="createFolder()"
+          [disabled]="!newFolderName.trim() || isCreatingFolder"
+        >
+          {{ isCreatingFolder ? 'Creating...' : 'Create folder' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+<div class="files-page">
+  <div class="page-header">
+  <div>
+    <h1>My Files</h1>
+    <p class="subtitle">Manage your files and folders</p>
+  </div>
+
+  <div class="header-actions">
+    <button
+      class="refresh-button"
+      (click)="refresh()"
+      [disabled]="isLoading"
+      title="Refresh files"
+    >
+      <span class="material-symbols-outlined">refresh</span>
+      Refresh
+    </button>
+
+    <button
+      class="action-button"
+      (click)="openCreateFolder()"
+      [disabled]="isLoading"
+    >
+      <span class="material-symbols-outlined">create_new_folder</span>
+      New folder
+    </button>
+  </div>
+  @if (showRenameModal) {
+  <div class="modal-backdrop" (click)="closeRenameModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>
+          Rename {{ renameItemType === 'folder' ? 'folder' : 'file' }}
+        </h2>
+
+        <button
+          class="modal-close"
+          (click)="closeRenameModal()"
+          [disabled]="isRenaming"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <p class="modal-description">
+        Enter a new name for "{{ renameItemName }}".
+      </p>
+
+      <label for="rename-name">New name</label>
+
+      <input
+        id="rename-name"
+        type="text"
+        [value]="renameItemName"
+        (input)="renameItemName = $any($event.target).value"
+        (keydown.enter)="renameItem()"
+        [disabled]="isRenaming"
+        autofocus
+      />
+
+      @if (renameErrorMessage) {
+        <p class="modal-error">{{ renameErrorMessage }}</p>
+      }
+
+      <div class="modal-actions">
+        <button
+          class="cancel-button"
+          (click)="closeRenameModal()"
+          [disabled]="isRenaming"
+        >
+          Cancel
+        </button>
+
+        <button
+          class="action-button"
+          (click)="renameItem()"
+          [disabled]="!renameItemName.trim() || isRenaming"
+        >
+          {{ isRenaming ? 'Saving...' : 'Save changes' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
+</div>
+
+  @if (currentFolder) {
+    <nav class="breadcrumb" aria-label="Folder navigation">
+      @for (folder of breadcrumbs; track folder.id; let i = $index) {
+        @if (i > 0) {
+          <span class="material-symbols-outlined breadcrumb-separator">
+            chevron_right
+          </span>
+        }
+
+        <button
+          class="breadcrumb-button"
+          [class.breadcrumb-current]="i === breadcrumbs.length - 1"
+          [disabled]="isLoading || i === breadcrumbs.length - 1"
+          (click)="navigateTo(i)"
+        >
+          @if (i === 0) {
+            <span class="material-symbols-outlined">home</span>
+          }
+
+          {{ folder.name }}
+        </button>
+      }
+    </nav>
+  }
+
+  @if (deleteErrorMessage) {
+  <div class="message-state error">
+    {{ deleteErrorMessage }}
+  </div>
+}
+
+  @if (isLoading) {
+    <div class="message-state">
+      <p>Loading folder contents...</p>
+    </div>
+  } @else if (errorMessage) {
+    <div class="message-state error">
+      {{ errorMessage }}
+    </div>
+  } @else if (currentFolder) {
+    @if (folders.length === 0 && files.length === 0) {
+      <div class="empty-state">
+        <span class="material-symbols-outlined empty-icon">folder_open</span>
+        <h3>This folder is empty</h3>
+        <p>You don't have any files or folders here yet.</p>
+      </div>
+    } @else {
+      <div class="files-table-wrapper">
+        <table class="files-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Modified</th>
+              <th></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (folder of folders; track folder.id) {
+              <tr>
+                <td>
+                  <button
+                    class="folder-link"
+                    (click)="openFolder(folder)"
+                    [disabled]="isLoading"
+                  >
+                    <span class="item-name">
+                      <span class="material-symbols-outlined folder-icon">
+                        folder
+                      </span>
+                      <span>{{ folder.name }}</span>
+                    </span>
+                  </button>
+                </td>
+
+                <td><span class="item-type">Folder</span></td>
+                <td>{{ folder.edited | date:'mediumDate' }}</td>
+                <td class="actions-cell">
+  <button
+    class="delete-button"
+    title="Delete folder"
+    (click)="deleteFolder(folder)"
+    [disabled]="deletingItemId !== null"
+  >
+    <span class="material-symbols-outlined">delete</span>
+  </button>
+  <button
+  class="rename-button"
+  title="Rename folder"
+  (click)="openRenameFolder(folder)"
+  [disabled]="deletingItemId !== null || isRenaming"
+>
+  <span class="material-symbols-outlined">edit</span>
+</button>
+</td>
+              </tr>
+            }
+
+            @for (file of files; track file.id) {
+              <tr>
+                <td>
+                  <div class="item-name">
+                    <span class="material-symbols-outlined file-icon">
+                      draft
+                    </span>
+                    <span>{{ file.name }}</span>
+                  </div>
+                </td>
+
+                <td><span class="item-type">File</span></td>
+                <td>{{ file.edited | date:'mediumDate' }}</td>
+                <td class="actions-cell">
+  <button
+    class="delete-button"
+    title="Delete file"
+    (click)="deleteFile(file)"
+    [disabled]="deletingItemId !== null"
+  >
+    <span class="material-symbols-outlined">delete</span>
+  </button>
+  <button
+  class="rename-button"
+  title="Rename file"
+  (click)="openRenameFile(file)"
+  [disabled]="deletingItemId !== null || isRenaming"
+>
+  <span class="material-symbols-outlined">edit</span>
+</button>
+</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  }
+</div>

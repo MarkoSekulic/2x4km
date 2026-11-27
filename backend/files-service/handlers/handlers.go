@@ -409,6 +409,53 @@ func (h FilesHandler) FolderRead(ctx context.Context, request *files.FolderReadR
 	}, nil
 }
 
+func (h FilesHandler) RootFolderRead(ctx context.Context, _ *files.Empty) (*files.FolderReadResponse, error) {
+
+	user, err := jwtauthenticator.RetriveValidUser(ctx, h.cfg.JWTPublicKey)
+	if err != nil {
+		return nil, err
+	}
+
+	userID, ok := user["id"].(string)
+	if !ok || strings.TrimSpace(userID) == "" {
+		return nil, status.Error(codes.Unauthenticated, "Invalid user identity")
+	}
+
+	var rootDoc struct {
+		RootFolderID primitive.ObjectID `bson:"root_folder_id"`
+	}
+
+	dbCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	err = h.repo.Collection(ROOT_COLLECTION).
+		FindOne(
+			dbCtx,
+			bson.M{"user_id": userID},
+			options.FindOne().SetProjection(bson.M{"root_folder_id": 1}),
+		).
+		Decode(&rootDoc)
+
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return nil, status.Error(codes.Internal, "root folder missing")
+		}
+
+		return nil, status.Error(codes.Unavailable, "files-db")
+	}
+
+	folder, err := h.FolderRead(ctx, &files.FolderReadRequest{
+		Id: rootDoc.RootFolderID.Hex(),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	folder.Root = ""
+
+	return folder, nil
+}
+
 func (h FilesHandler) FileCreate(ctx context.Context, request *files.FileCreateRequest) (*files.Empty, error) {
 	user, err := jwtauthenticator.RetriveValidUser(ctx, h.cfg.JWTPublicKey)
 	if err != nil {
