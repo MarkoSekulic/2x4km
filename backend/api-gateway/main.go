@@ -98,7 +98,7 @@ func main() {
 	}
 
 	go func() {
-		if err := gwServer.ListenAndServe(); err != nil {
+		if err := gwServer.ListenAndServeTLS("../certs/localhost.pem", "../certs/localhost-key.pem"); err != nil {
 			log.Fatal("server error: ", err)
 		}
 	}()

@@ -62,7 +62,11 @@
             }
           },
           "defaultConfiguration": "development",
-          "options": {}
+          "options": {
+            "ssl": true,
+            "sslCert": "../.certs/localhost.pem",
+            "sslKey": "../.certs/localhost-key.pem"
+          }
         },
         "test": {
           "builder": "@ngx-env/builder:unit-test",
