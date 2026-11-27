@@ -5,6 +5,8 @@ ARG CURRENT_DIRECTORY
 # Set the Current Working Directory inside the container
 WORKDIR /app
 
+RUN mkdir -p /certs
+
 # Set up Healthcheck 
 COPY --from=ghcr.io/grpc-ecosystem/grpc-health-probe:v0.4.38 /ko-app/grpc-health-probe /bin/grpc_health_probe
 

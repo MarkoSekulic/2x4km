@@ -36,3 +36,6 @@ db_data
 # .vscode/
 node_modules
 .vscode/settings.json
+
+# Certs
+.certs

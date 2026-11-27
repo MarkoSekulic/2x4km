@@ -105,7 +105,7 @@ func (h UsersHandler) RegisterPreVerify(ctx context.Context, request *users.Regi
 		From:    "noreply@gmail.com",
 		To:      []string{request.Email},
 		Subject: "2x4km Account Verification",
-		Body:    "<a href='localhost:4200/verify/" + verificationID.Hex() + "' > Verify account here </a> ",
+		Body:    "<a href='https://localhost:4200/verify/" + verificationID.Hex() + "' > Verify account here </a> ",
 		IsHTML:  true,
 	})
 	if err != nil {
@@ -263,7 +263,7 @@ func (h UsersHandler) TFALogin(ctx context.Context, request *users.TFALoginReque
 		Value:    jwtToken,
 		Path:     "/",
 		HttpOnly: false,
-		Secure:   false,
+		Secure:   true,
 		SameSite: http.SameSiteLaxMode,
 	}
 	grpc.SendHeader(ctx, metadata.Pairs("set-cookie", cookie.String()))
@@ -311,7 +311,7 @@ func (h UsersHandler) PrePasswordReset(ctx context.Context, request *users.PrePa
 		From:    "noreply@gmail.com",
 		To:      []string{request.Email},
 		Subject: "2x4km Account Password Forgot ",
-		Body:    "<a href='localhost:4200/reset-password/" + PassForgotToken.Hex() + "' > Verify account here </a> ",
+		Body:    "<a href='https://localhost:4200/reset-password/" + PassForgotToken.Hex() + "' > Verify account here </a> ",
 		IsHTML:  true,
 	})
 	if err != nil {
