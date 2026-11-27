@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"proto/notifications-service"
 	"proto/template-service"
 	"proto/users-service"
 	"syscall"
@@ -59,6 +60,14 @@ func main() {
 	defer usersConn.Close()
 
 	err = users.RegisterUsersServiceHandlerClient(ctx, gwmux, users.NewUsersServiceClient(usersConn))
+	if err != nil {
+		log.Fatalln("Failed to register gateway:", err)
+	}
+	// Register Notification
+	notificationsConn := dialConnection(cfg.NotificationsServiceAddress)
+	defer usersConn.Close()
+
+	err = notifications.RegisterNotificationsServiceHandlerClient(ctx, gwmux, notifications.NewNotificationsServiceClient(notificationsConn))
 	if err != nil {
 		log.Fatalln("Failed to register gateway:", err)
 	}
