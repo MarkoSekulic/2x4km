@@ -1,0 +1,167 @@
+<header class="header">
+
+  <div class="search-container">
+    <svg lucideSearch [size]="18"></svg>
+
+    <input
+      type="text"
+      placeholder="Search files and folders..."
+      aria-label="Search files and folders"
+    />
+  </div>
+
+  <div class="header-actions">
+
+    <!-- NOTIFICATIONS DROPDOWN -->
+    <div class="dropdown-wrapper">
+      <button
+        type="button"
+        class="icon-button notification-btn"
+        aria-label="Notifications"
+        [attr.aria-expanded]="notificationsOpen()"
+        (click)="toggleNotifications()"
+      >
+        <svg lucideBell [size]="19"></svg>
+        @if (notifications().length > 0) {
+          <span class="notification-dot"></span>
+        }
+      </button>
+
+      @if (notificationsOpen()) {
+        <div class="notifications-dropdown">
+          <div class="dropdown-header">
+            <span class="dropdown-title">
+              Notifications ({{ notifications().length }})
+            </span>
+
+            <button
+              type="button"
+              class="refresh-btn"
+              (click)="loadNotifications()"
+              [disabled]="isLoadingNotifications()"
+            >
+              {{ isLoadingNotifications() ? 'Refreshing...' : 'Refresh' }}
+            </button>
+          </div>
+
+          <div class="notifications-list">
+            @if (isLoadingNotifications() && notifications().length === 0) {
+              <div class="dropdown-empty">
+                Loading notifications...
+              </div>
+            } @else if (notifications().length === 0) {
+              <div class="dropdown-empty">
+                You're all caught up! No notifications yet.
+              </div>
+            } @else {
+              @for (item of notifications(); track $index) {
+                <a
+                  class="notification-item"
+                  [routerLink]="getTargetRoute(item)"
+                  (click)="notificationsOpen.set(false)"
+                >
+                  <div
+                    class="notification-icon"
+                    [style.background]="getIconBg(item.type)"
+                    [style.color]="getIconColor(item.type)"
+                  >
+                    @switch (item.type) {
+                      @case ('shared') {
+                        <svg lucideShare2 [size]="16"></svg>
+                      }
+                      @case ('added') {
+                        <svg lucideFilePlus [size]="16"></svg>
+                      }
+                      @case ('updated') {
+                        <svg lucideRefreshCw [size]="16"></svg>
+                      }
+                      @default {
+                        <svg lucideBell [size]="16"></svg>
+                      }
+                    }
+                  </div>
+
+                  <div class="notification-content">
+                    <p class="notification-text">
+                      <strong>{{ item.byUserName }}</strong>
+                      @switch (item.type) {
+                        @case ('shared') {
+                          shared the {{ item.fType }}
+                          <strong>"{{ item.fName }}"</strong>
+                          with you
+                        }
+                        @case ('added') {
+                          added
+                          <strong>"{{ item.addedFName || 'an item' }}"</strong>
+                          to {{ item.fType }}
+                          <strong>"{{ item.fName }}"</strong>
+                        }
+                        @case ('updated') {
+                          updated the {{ item.fType }}
+                          <strong>"{{ item.fName }}"</strong>
+                        }
+                        @default {
+                          interacted with {{ item.fType }}
+                          <strong>"{{ item.fName }}"</strong>
+                        }
+                      }
+                    </p>
+
+                    <span class="notification-time">
+                      {{ formatRelativeTime(item.notifiedAt) }}
+                    </span>
+                  </div>
+                </a>
+              }
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- PROFILE DROPDOWN -->
+    <div class="dropdown-wrapper">
+      <button
+        type="button"
+        class="profile"
+        (click)="toggleProfileDropdown()"
+        [attr.aria-expanded]="profileDropdownOpen()"
+      >
+        <div class="avatar">{{ initials() }}</div>
+
+        <div class="profile-info">
+          <span class="profile-name">{{ userStore.fullName() || 'User' }}</span>
+          <span class="profile-role">{{ userStore.user()?.email || 'Personal account' }}</span>
+        </div>
+
+        <svg lucideChevronDown [size]="16" class="profile-chevron"></svg>
+      </button>
+
+      @if (profileDropdownOpen()) {
+        <div class="profile-dropdown">
+          <a
+            class="dropdown-item"
+            routerLink="/settings"
+            (click)="profileDropdownOpen.set(false)"
+          >
+            <svg lucideSettings [size]="16"></svg>
+            <span>Account Settings</span>
+          </a>
+
+          <div class="dropdown-divider"></div>
+
+          <button
+            type="button"
+            class="dropdown-item logout-btn"
+            (click)="logout()"
+          >
+            <svg lucideLogOut [size]="16"></svg>
+            <span>Log out</span>
+          </button>
+        </div>
+      }
+    </div>
+
+  </div>
+
+</header>

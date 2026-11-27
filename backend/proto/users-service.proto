@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+package users;
+option go_package = "proto/users";
+
+import "google/api/annotations.proto";
+
+service UsersService {
+  rpc RegisterPreVerify(RegisterRequest) returns (Empty) {
+    option (google.api.http) = {
+      post: "/user/register"
+      body: "*"
+    };
+  }
+  rpc Register(VerifyRequest) returns (Empty) {
+    option (google.api.http) = {
+      get: "/user/verify/{verifyId}"
+    };
+  }
+  rpc Login(LoginRequest) returns (TFATokenResponse) {
+    option (google.api.http) = {
+      post: "/user/login"
+      body: "*"
+    };
+  }
+  rpc TFALogin(TFALoginRequest) returns (Empty) {
+    option (google.api.http) = {
+      post: "/user/TFALogin/{TFAToken}"
+      body: "*"
+    };
+  }
+  rpc PrePasswordReset(PrePassResetRequest) returns (Empty) {
+    option (google.api.http) = {
+      post: "/user/prePassForgot"
+      body: "*"
+    };
+  }
+  rpc PasswordReset(PassResetRequest) returns (Empty) {
+    option (google.api.http) = {
+      post: "/user/passForgot/{passForgotToken}"
+      body: "*"
+    };
+  }
+}
+
+message Empty {}
+
+message RegisterRequest {
+  string email = 1;
+  string password = 2;
+  string firstName = 3;
+  string lastName = 4;  
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message VerifyRequest {
+  string verifyId = 1;
+}
+
+message TFALoginRequest {
+  string TFAToken = 1;
+  string passkey = 2;
+}
+
+message TFATokenResponse {
+  string TFAToken = 1;
+}
+
+message PrePassResetRequest {
+  string email = 1;
+}
+
+message PassResetRequest {
+  string passForgotToken = 1;
+  string email = 2;
+  string newPassword = 3;
+}
