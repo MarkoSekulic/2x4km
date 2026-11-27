@@ -251,6 +251,27 @@ func local_request_FilesService_FileRead_0(ctx context.Context, marshaler runtim
 	return msg, metadata, err
 }
 
+func request_FilesService_RootFolderRead_0(ctx context.Context, marshaler runtime.Marshaler, client FilesServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq Empty
+		metadata runtime.ServerMetadata
+	)
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	msg, err := client.RootFolderRead(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_FilesService_RootFolderRead_0(ctx context.Context, marshaler runtime.Marshaler, server FilesServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq Empty
+		metadata runtime.ServerMetadata
+	)
+	msg, err := server.RootFolderRead(ctx, &protoReq)
+	return msg, metadata, err
+}
+
 // RegisterFilesServiceHandlerServer registers the http handlers for service FilesService to "mux".
 // UnaryRPC     :call FilesServiceServer directly.
 // StreamingRPC :currently unsupported pending https://github.com/grpc/grpc-go/issues/906.
@@ -263,7 +284,7 @@ func RegisterFilesServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.FilesService/FolderCreate", runtime.WithHTTPPathPattern("/folders/create"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/files.FilesService/FolderCreate", runtime.WithHTTPPathPattern("/folders/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -283,7 +304,7 @@ func RegisterFilesServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.FilesService/FolderUpdate", runtime.WithHTTPPathPattern("/folders/update"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/files.FilesService/FolderUpdate", runtime.WithHTTPPathPattern("/folders/update"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -303,7 +324,7 @@ func RegisterFilesServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.FilesService/FolderDelete", runtime.WithHTTPPathPattern("/folders/delete"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/files.FilesService/FolderDelete", runtime.WithHTTPPathPattern("/folders/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -323,7 +344,7 @@ func RegisterFilesServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.FilesService/FolderRead", runtime.WithHTTPPathPattern("/folders/read"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/files.FilesService/FolderRead", runtime.WithHTTPPathPattern("/folders/read"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -343,7 +364,7 @@ func RegisterFilesServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.FilesService/FileCreate", runtime.WithHTTPPathPattern("/files/create"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/files.FilesService/FileCreate", runtime.WithHTTPPathPattern("/files/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -363,7 +384,7 @@ func RegisterFilesServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.FilesService/FileUpdate", runtime.WithHTTPPathPattern("/files/update"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/files.FilesService/FileUpdate", runtime.WithHTTPPathPattern("/files/update"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -383,7 +404,7 @@ func RegisterFilesServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.FilesService/FileDelete", runtime.WithHTTPPathPattern("/files/delete"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/files.FilesService/FileDelete", runtime.WithHTTPPathPattern("/files/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -403,7 +424,7 @@ func RegisterFilesServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/.FilesService/FileRead", runtime.WithHTTPPathPattern("/files/read"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/files.FilesService/FileRead", runtime.WithHTTPPathPattern("/files/read"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -416,6 +437,26 @@ func RegisterFilesServiceHandlerServer(ctx context.Context, mux *runtime.ServeMu
 			return
 		}
 		forward_FilesService_FileRead_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodGet, pattern_FilesService_RootFolderRead_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/files.FilesService/RootFolderRead", runtime.WithHTTPPathPattern("/folders/root"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_FilesService_RootFolderRead_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_FilesService_RootFolderRead_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
@@ -461,7 +502,7 @@ func RegisterFilesServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.FilesService/FolderCreate", runtime.WithHTTPPathPattern("/folders/create"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/files.FilesService/FolderCreate", runtime.WithHTTPPathPattern("/folders/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -478,7 +519,7 @@ func RegisterFilesServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.FilesService/FolderUpdate", runtime.WithHTTPPathPattern("/folders/update"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/files.FilesService/FolderUpdate", runtime.WithHTTPPathPattern("/folders/update"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -495,7 +536,7 @@ func RegisterFilesServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.FilesService/FolderDelete", runtime.WithHTTPPathPattern("/folders/delete"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/files.FilesService/FolderDelete", runtime.WithHTTPPathPattern("/folders/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -512,7 +553,7 @@ func RegisterFilesServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.FilesService/FolderRead", runtime.WithHTTPPathPattern("/folders/read"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/files.FilesService/FolderRead", runtime.WithHTTPPathPattern("/folders/read"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -529,7 +570,7 @@ func RegisterFilesServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.FilesService/FileCreate", runtime.WithHTTPPathPattern("/files/create"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/files.FilesService/FileCreate", runtime.WithHTTPPathPattern("/files/create"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -546,7 +587,7 @@ func RegisterFilesServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.FilesService/FileUpdate", runtime.WithHTTPPathPattern("/files/update"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/files.FilesService/FileUpdate", runtime.WithHTTPPathPattern("/files/update"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -563,7 +604,7 @@ func RegisterFilesServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.FilesService/FileDelete", runtime.WithHTTPPathPattern("/files/delete"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/files.FilesService/FileDelete", runtime.WithHTTPPathPattern("/files/delete"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -580,7 +621,7 @@ func RegisterFilesServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/.FilesService/FileRead", runtime.WithHTTPPathPattern("/files/read"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/files.FilesService/FileRead", runtime.WithHTTPPathPattern("/files/read"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -593,27 +634,46 @@ func RegisterFilesServiceHandlerClient(ctx context.Context, mux *runtime.ServeMu
 		}
 		forward_FilesService_FileRead_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
+	mux.Handle(http.MethodGet, pattern_FilesService_RootFolderRead_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/files.FilesService/RootFolderRead", runtime.WithHTTPPathPattern("/folders/root"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_FilesService_RootFolderRead_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_FilesService_RootFolderRead_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
 	return nil
 }
 
 var (
-	pattern_FilesService_FolderCreate_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"folders", "create"}, ""))
-	pattern_FilesService_FolderUpdate_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"folders", "update"}, ""))
-	pattern_FilesService_FolderDelete_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"folders", "delete"}, ""))
-	pattern_FilesService_FolderRead_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"folders", "read"}, ""))
-	pattern_FilesService_FileCreate_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"files", "create"}, ""))
-	pattern_FilesService_FileUpdate_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"files", "update"}, ""))
-	pattern_FilesService_FileDelete_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"files", "delete"}, ""))
-	pattern_FilesService_FileRead_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"files", "read"}, ""))
+	pattern_FilesService_FolderCreate_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"folders", "create"}, ""))
+	pattern_FilesService_FolderUpdate_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"folders", "update"}, ""))
+	pattern_FilesService_FolderDelete_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"folders", "delete"}, ""))
+	pattern_FilesService_FolderRead_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"folders", "read"}, ""))
+	pattern_FilesService_FileCreate_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"files", "create"}, ""))
+	pattern_FilesService_FileUpdate_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"files", "update"}, ""))
+	pattern_FilesService_FileDelete_0     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"files", "delete"}, ""))
+	pattern_FilesService_FileRead_0       = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"files", "read"}, ""))
+	pattern_FilesService_RootFolderRead_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"folders", "root"}, ""))
 )
 
 var (
-	forward_FilesService_FolderCreate_0 = runtime.ForwardResponseMessage
-	forward_FilesService_FolderUpdate_0 = runtime.ForwardResponseMessage
-	forward_FilesService_FolderDelete_0 = runtime.ForwardResponseMessage
-	forward_FilesService_FolderRead_0   = runtime.ForwardResponseMessage
-	forward_FilesService_FileCreate_0   = runtime.ForwardResponseMessage
-	forward_FilesService_FileUpdate_0   = runtime.ForwardResponseMessage
-	forward_FilesService_FileDelete_0   = runtime.ForwardResponseMessage
-	forward_FilesService_FileRead_0     = runtime.ForwardResponseMessage
+	forward_FilesService_FolderCreate_0   = runtime.ForwardResponseMessage
+	forward_FilesService_FolderUpdate_0   = runtime.ForwardResponseMessage
+	forward_FilesService_FolderDelete_0   = runtime.ForwardResponseMessage
+	forward_FilesService_FolderRead_0     = runtime.ForwardResponseMessage
+	forward_FilesService_FileCreate_0     = runtime.ForwardResponseMessage
+	forward_FilesService_FileUpdate_0     = runtime.ForwardResponseMessage
+	forward_FilesService_FileDelete_0     = runtime.ForwardResponseMessage
+	forward_FilesService_FileRead_0       = runtime.ForwardResponseMessage
+	forward_FilesService_RootFolderRead_0 = runtime.ForwardResponseMessage
 )

@@ -97,6 +97,7 @@ services:
       - backend/files-service/.env
     environment:
       - MONGODB_ADDR=mongodb://${DB_ROOT_USERNAME}:${DB_ROOT_PASSWORD}@files-mongodb:27017
+      - JWT_PUBLIC_KEY=${JWT_PUBLIC_KEY}
     depends_on:
       files-mongodb:
         condition: service_healthy

@@ -64,7 +64,15 @@ service FilesService {
 
   rpc InnerRootCreate(InnerRootCreateRequest) returns (Empty){
 
+
   }
+
+  rpc RootFolderRead(Empty) returns (FolderReadResponse) {
+    option (google.api.http) = {
+        get: "/folders/root"
+    };
+  }
+
 }
 
 message Empty{
@@ -102,7 +110,6 @@ message FolderReadResponse {
   string edited = 8;
   int64 ver = 9;
 }
-
 
 message FileDeleteRequest {
   string id = 1;

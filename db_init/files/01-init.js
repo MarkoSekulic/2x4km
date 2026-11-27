@@ -53,7 +53,7 @@ filesdb.createCollection('files', {
         name: { bsonType: 'string', minLength: 1 },
         parent: { bsonType: 'objectId' },
         root: { bsonType: 'objectId' },
-        OSID: { bsonType: 'string', minLength: 1 }, // object store id
+        OSID: { bsonType: 'string' }, // object store id
         created_at: { bsonType: 'date' },
       },
     },
